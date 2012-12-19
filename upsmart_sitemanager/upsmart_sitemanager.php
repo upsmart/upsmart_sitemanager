@@ -16,6 +16,7 @@ add_action( 'parse_request', 'upsmart_parse_request' );
 add_action( 'the_posts', 'upsmart_the_posts' );
 
 require_once dirname(__FILE__).'/create.php';
+require_once dirname(__FILE__).'/profiles.php';
 
 function upsmart_parse_request( &$wp ) {
 	//If this plugin has a function to handle the currently-requested page, then
