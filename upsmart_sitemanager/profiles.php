@@ -18,6 +18,8 @@
 			case '/14': $post = upsmart_page_profiles_company_labs($post); break;
 			//Add more cases
 		}
+		echo "<br/><br/>";
+		
 		return $post;
 	}
 	
@@ -37,12 +39,15 @@
 	function upsmart_page_profiles_company_listing($post) {
 		global $wpdb;
 		$post->post_title = "Company Profiles";
-		$result = $wpdb->get_results("SELECT B.wordpress_id as id, B.name, B.url, P.about, P.logo 
+		$result = $wpdb->get_results("SELECT B.wordpress_id as id, B.name, B.url, P.about, P.logo  
 								FROM upsmart_business B, upsmart_profile P  
-								WHERE B.wordpress_id = P.wordpress_id", ARRAY_A);
+								WHERE B.wordpress_id = P.wordpress_id"
+								, ARRAY_A);
 		
 		if($result === false) wp_die("An error has occurred: Unable to fetch companies from database.");
+
 		foreach($result as $row){
+
 			$id = $row['id'];
 			$cpname = $row['name']; 
 			$url = $row['url'];
@@ -82,7 +87,7 @@ EOHTML;
 		if(!empty($_GET)) {
 			
 			$result = $wpdb->get_row($wpdb->prepare("SELECT B.wordpress_id as id, B.name, B.url, P.logo 
-						FROM upsmart_business as B, upsmart_profile as P  
+						FROM upsmart_business B, upsmart_profile P  
 							WHERE P.wordpress_id = B.wordpress_id AND P.wordpress_id = %d",
 							array(
 								$_GET['id']
@@ -103,9 +108,11 @@ EOHTML;
 		$linkInvest = home_url('profiles/12?id=' . $id);
 		$linkMission = home_url('profiles/10?id=' . $id);
 		$linkAbout = home_url('profiles/11?id=' . $id);
-		
+
 		//Assuming database has a default filler company logo image, so it can never fail.
-		list($width, $height) = getimagesize($logo);
+		//list($width, $height) = getimagesize($logo);
+		$height = 50;
+		$width = 50;
 		
 		$post->post_content .= <<<EOHTML
 		<div id="link-sidebar" class="left">
@@ -134,7 +141,7 @@ EOHTML;
 				</a>
 			</div>
 EOHTML;
-		$post->post_content .= do_action('sidebar_right');
+		//$post->post_content .= do_action('sidebar_right');
 		$post->post_content .= <<<EOHTML
 		</div>
 		
@@ -164,8 +171,8 @@ EOHTML;
 		   </div>
 
 			<ul>
-				<li class="left"><a href="$linkAbout"> Who We Are </a></li>
-				<li class="left"><a href="$linkMission"> What We&apos;re Doing </a></li>
+				<li class="left"><a href="$linkAbout"> About Us </a></li>
+				<li class="left"><a href="$linkMission"> Our Mission </a></li>
 			</ul>
 
 			<div id="blog" class="clear">
@@ -187,14 +194,14 @@ EOHTML;
 		
 		if(!empty($_GET)) {
 						
-			$result = $wpdb->query($wpdb->prepare("SELECT mission, history, name
-							FROM upsmart_profile P, upsmart_business B
-							WHERE P.wordpress_id = B.wordpress_id AND P.wordpress_id = %d)",
+			$result = $wpdb->get_row($wpdb->prepare("SELECT P.mission, P.history, B.name 
+							FROM upsmart_profile P, upsmart_business B 
+							WHERE P.wordpress_id = B.wordpress_id AND B.wordpress_id = %d",
 							array(
 								$_GET['id']
 							)
 			), ARRAY_A);
-			
+
 			if($result === false) wp_die("An error has occurred.");
 		}
 		
@@ -221,9 +228,9 @@ EOHTML;
 		
 		if(!empty($_GET)) {
 			
-			$peopleData= $wpdb->query($wpdb->prepare("SELECT * 
+			$peopleData= $wpdb->get_results($wpdb->prepare("SELECT * 
 						FROM upsmart_people 
-							WHERE wordpress_id = %d)",
+						WHERE wordpress_id = %d",
 							array(
 								$_GET['id']
 							)
@@ -231,9 +238,9 @@ EOHTML;
 						
 			if($peopleData === false) wp_die("An error has occurred.");
 						
-			$aboutData = $wpdb->query($wpdb->prepare("SELECT about, name
-							FROM upsmart_profile P, upsmart_business B
-							WHERE P.wordpress_id = B.wordpress_id AND P.wordpress_id = %d)",
+			$aboutData = $wpdb->get_row($wpdb->prepare("SELECT P.about, B.name 
+							FROM upsmart_profile P, upsmart_business B 
+							WHERE P.wordpress_id = B.wordpress_id AND P.wordpress_id = %d",
 							array(
 								$_GET['id']
 							)
@@ -242,17 +249,17 @@ EOHTML;
 			if($aboutData === false) wp_die("An error has occurred.");
 			
 		}
-		
+
 		$company = $aboutData['name'];
 		$aboutContent = $aboutData['about'];
 		
 		$post->post_content .= <<<EOHTML
 		<h3 class = "company-page-title">$company</h3>
 		<h4 class = "company-page-subHead">About Us</h4>
-		<p class = "company-page-text-block">$about</p>	
+		<p class = "company-page-text-block">$aboutContent</p>	
 EOHTML;
 	
-		foreach($result as $row){
+		foreach($peopleData as $row){
 			$cpname = $row['fname'] . ' ' . $row['lname']; 
 			$title = $row['title'];
 			$bio = $row['bio'];
@@ -260,7 +267,9 @@ EOHTML;
 			$email = 'Use company email';
 
 			//Assuming database references a default filler person photo image, so it can never fail.
-			list($width, $height) = getimagesize($photo);
+			//list($width, $height) = getimagesize($photo);
+			$width = 0;
+			$height = 0;
 			
 			$post->post_content .= <<<EOHTML
 			<div class="person-profile">
@@ -291,9 +300,9 @@ EOHTML;
 		
 		if(!empty($_GET)) {
 						
-			$result = $wpdb->query($wpdb->prepare("SELECT name
-							FROM upsmart_business
-							WHERE wordpress_id = %d)",
+			$result = $wpdb->get_row($wpdb->prepare("SELECT name 
+							FROM upsmart_business 
+							WHERE wordpress_id = %d",
 							array(
 								$_GET['id']
 							)
