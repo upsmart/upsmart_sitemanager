@@ -91,10 +91,9 @@ EOHTML;
 			
 			if($result === false) wp_die("An error has occurred while loading the company.");
 		}
-		unset($_GET['id']);
 		
 		$id = $_GET['id'];
-		$cpname = $result['name']; 
+		$cpName = $result['name']; 
 		$companyLink = strtolower(str_replace(" ","",$cpName));
 		$url = $result['url'];
 		$logo = $result['logo'];
@@ -111,7 +110,7 @@ EOHTML;
 		$post->post_content .= <<<EOHTML
 		<div id="link-sidebar" class="left">
 		    <!-- LOGO IMAGES WERE ORIGINALLY SCALED DOWN IN PHP TO FIT CONTAINER, I HAVE THE CODE IF YOU NEED IT OR YOU CAN USE CSS 3 "Contain" -->
-			<a class="image-link" href="$linkHome"><img src ="$Logo" height="$height" width="$width" /></a>
+			<a class="image-link" href="$linkHome"><img src ="$logo" height="$height" width="$width" /></a>
 			<div class="button-wrapper">
 				<a href="http://www.go-upsmart.com/groups/$companyLink" class="a-btn radius">
 					<span class="a-btn-text">Fan Group</span> 
@@ -145,7 +144,7 @@ EOHTML;
 		   <h3 class = "company-page-title">$cpName</h3>
 		   <div id="mediaFrame">	          
 		         <!-- THIS SECTION NEEDS TO BE COMPLETED ONCE DATABASE SUPPORTS THIS SECTION -->
-EOHTML;		       
+EOHTML;
 				$mime_type = null;
 				switch($mime_type)
 				{
@@ -161,7 +160,7 @@ EOHTML;
 				}
 				
 				
-		$post->post_content .= <<<EOHTML		   
+		$post->post_content .= <<<EOHTML
 		   </div>
 
 			<ul>
@@ -177,8 +176,6 @@ EOHTML;
 			</div>
 		</div>	
 EOHTML;
-		var_dump($post);
-		//die();
 		return $post;
 		
 	}
