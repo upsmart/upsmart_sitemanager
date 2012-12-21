@@ -10,7 +10,7 @@
 		switch(upsmart_handle_page_info) {
 			default:
 			case '/1': $post = upsmart_page_profiles_company_listing($post); break;
-			case '/9': upsmart_page_profiles_company_home($post); break;
+			case '/9': $post = upsmart_page_profiles_company_home($post); break;
 			case '/10': $post = upsmart_page_profiles_company_mission($post); break;
 			case '/11': $post = upsmart_page_profiles_company_about($post); break;
 			case '/12': $post = upsmart_page_profiles_company_invest($post); break;
@@ -150,13 +150,16 @@ EOHTML;
 				switch($mime_type)
 				{
 					case 'image/svg+xml': 
-						$post->post_content .= '<embed src="/cp-profiles/companies/Tumalow/Tumalowpresentation.svg" type="image/svg+xml" width="485" height="280"> </embed>';
+						$post->post_content .= '<embed src="/cp-profiles/companies/Tumalow/Tumalowpresentation.svg" type="image/svg+xml" width="485" height="280"></embed>';
+					    break;
 					case 'video/x-youtube': 
 						$post->post_content .= '<iframe width="485" height="280" src="http://youtu.be/b21rTV_MlxQ" frameborder="0" allowfullscreen></iframe>';
+						break;
 					default:
 						$post->post_content .= '<p class="pomotional-warning">No company promotional is present at this time</p>';
-					break;
+						break;
 				}
+				
 				
 		$post->post_content .= <<<EOHTML		   
 		   </div>
