@@ -36,12 +36,21 @@ function upsmart_the_posts($posts) {
 	
 	//Create a dummy post
 	$post = new stdClass();
-	$post->ID = -9999;
+	$post->post_type = "upsmart";
+	$post->comment_status = 'closed';
+	$post->ping_status = 0;
+	$post->comment_count = 0;
+	$post->post_date = 0;
+	$post->post_status = 0;
+	$post->post_author = 0;
+	$post->post_parent = 0;
 	
 	//Call the function that will actually handle the request.
 	$function = 'upsmart_page_'.upsmart_handle_page;
 	if(function_exists($function)) $post = $function($post);
 	else $post->post_content = "404";
+	
+	$post->post_name = $post->post_title;
 	
 	return array(0 => $post);
 }
