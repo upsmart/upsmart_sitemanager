@@ -31,7 +31,6 @@
 	  
 	function upsmart_page_create($post) {
 		$post->post_title = 'Hosting Signup';
-		$post->comment_status = 'closed';
 		switch(upsmart_handle_page_info) {
 			default:
 			case '/1': $post = upsmart_page_create_home($post); break;
@@ -483,24 +482,21 @@ EOHTML;
 		$post->post_content = upsmart_page_create_nav(4).'<h2>Tech Stuff</h2>';
 		
 		if(!empty($_POST)) {
-			$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_business
-							(wordpress_id,name,incorporated,url)
-							VALUES(%d,%s,%d,%s)",
-							array(
-								get_current_user_id(),
-								$_POST['project_name'],
-								($_POST['project_incorporated']=='yes')?1:0,
-								($_POST['project_hassite']=='yes')?$_POST['project_site']:''
-							)
-			));
+			/*Create their site here*/
 			
-			if($result === false) wp_die("An error has occurred.");
+			die();
 		}
 		
  		/*if($wpdb->get_var("SELECT count(*) FROM upsmart_business WHERE wordpress_id=".get_current_user_id())) {
  			wp_redirect(home_url('create/7'));
  			exit();
  		}*/
+ 		$themes = "";
+ 		$theme_list = wp_get_themes(array('allowed'=>'network'));
+ 		foreach($theme_list as $n => $t) {
+			//var_dump($t);
+			$themes .= "<div class='theme' style='float: left;'><img src='".content_url('themes/'.$n.'/screenshot.png')."' style='width: 150px'/><br/><input type='radio' name='theme' value='$n'/> {$t->Name}</div>";
+ 		}
 		
 		$post->post_content .= <<<EOHTML
 		You're almost there! Just a few technical questions and we'll get you set up.
@@ -513,7 +509,13 @@ EOHTML;
 					<input type='radio' name='use_domain' style='display: inline' value='yes'/> Use my own domain name: <input style='width: auto' name='domain' placeholder='example.com'/><br/>
 					<input type='radio' name='use_domain' style='display: inline' value='no'/> Use a sub-domain: <input style='width: auto' name='domain' placeholder='example'/>.upsmart.com
 				</td>
-			</tr>
+				</tbody>
+				<tbody id="theme">
+				<tr><th colspan='2'><h4>Theme</h4></th></tr>
+				<tr><td colspan='2'>
+					{$themes}<br style='clear: both'/>
+				</td></tr>
+				<tr><th colspan='2'><input type='submit' value='Save and Create'/></th></tr>
 				</tbody>
 			</table>
 		</form>
