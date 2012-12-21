@@ -145,7 +145,7 @@ EOHTML;
 		   <h3 class = "company-page-title">$cpName</h3>
 		   <div id="mediaFrame">	          
 		         <!-- THIS SECTION NEEDS TO BE COMPLETED ONCE DATABASE SUPPORTS THIS SECTION -->
-EOHTML;		       
+EOHTML;
 				$mime_type = null;
 				switch($mime_type)
 				{
@@ -161,7 +161,7 @@ EOHTML;
 				}
 				
 				
-		$post->post_content .= <<<EOHTML		   
+		$post->post_content .= <<<EOHTML
 		   </div>
 
 			<ul>
