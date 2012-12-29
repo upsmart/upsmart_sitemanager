@@ -14,9 +14,27 @@ Author URI: http://tjl.co/
 //Bind to various actions needed to hijack the request.
 add_action( 'parse_request', 'upsmart_parse_request' );
 add_action( 'the_posts', 'upsmart_the_posts' );
+add_action( 'wp_enqueue_scripts', 'upsmart_enqueue_scripts' );
 
 require_once dirname(__FILE__).'/create.php';
 require_once dirname(__FILE__).'/profiles.php';
+require_once dirname(__FILE__).'/templates.php';
+
+//Fix post formatting by removing wpautop
+remove_filter('the_content','wpautop');
+add_filter('the_content','upsmart_filter_content');
+
+function upsmart_filter_content($content){
+	if(get_post_type()=='upsmart') //if it does not work, you may want to pass the current post object to get_post_type
+		return $content;//no autop
+	else
+		return wpautop($content);
+}
+
+function upsmart_enqueue_scripts() {
+	wp_register_style('upsmart_page_profiles',plugins_url('css/profiles.css',__FILE__));
+	wp_enqueue_style('upsmart_page_profiles');
+}
 
 function upsmart_parse_request( &$wp ) {
 	//If this plugin has a function to handle the currently-requested page, then
@@ -36,12 +54,13 @@ function upsmart_the_posts($posts) {
 	
 	//Create a dummy post
 	$post = new stdClass();
+	$post->ID="upsmart";
 	$post->post_type = "upsmart";
 	$post->comment_status = 'closed';
-	$post->ping_status = 0;
-	$post->comment_count = 0;
+	$post->ping_status = 'closed';
+	$post->comment_count = -1;
 	$post->post_date = 0;
-	$post->post_status = 0;
+	$post->post_status = 'published';
 	$post->post_author = 0;
 	$post->post_parent = 0;
 	

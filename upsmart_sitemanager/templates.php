@@ -4,14 +4,17 @@
 	 */
 	 
 	//Class for dealing with potential differences between themes.
-	interface theme {
+	/*interface theme {
 		abstract function changeLogo($url);
 		abstract function changePrimaryColor($c);
-	}
-	class template {
+	}*/
+	abstract class upsmart_template {
 		protected $data = null;
 		
 		function __construct($n) {
 			$this->data = $n;
 		}
+		
+		abstract function getName();
+		abstract function getTitle();
 	}

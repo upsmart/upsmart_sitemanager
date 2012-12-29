@@ -1,0 +1,54 @@
+.company-listing {
+	text-align: center;
+	padding-left: 5px;
+	width: 33%;
+	width: calc(33% - 5px);
+	width: -moz-calc(33% - 5px);
+	width: -webkit-calc(33% - 5px);
+	float: left;
+}
+.company-listing  .image-link>img {
+	max-width: 150px;
+	max-height: 150px;
+}
+.company-listing:not(:last-child) {
+	border-right: 1px solid #EEE;
+}
+
+.company-page-title {
+	font-size: 2em;
+}
+
+#link-sidebar {
+	float: left;
+	width: 20%;
+	width: calc(150px);
+	width: -moz-calc(150px);
+	width: -webkit-calc(150px);
+	border-right: 1px solid #DDD;
+}
+#link-sidebar .image-link>img {
+	max-width: 150px;
+	max-height: 150px;
+}
+#company-main-content {
+	float: left;
+	width: 80%;
+	width: calc(100% - 156px);
+	width: -moz-calc(100% - 156px);
+	width: -webkit-calc(100% - 156px);
+	padding-left: 5px;
+}
+
+.a-btn-radius {
+
+}
+.a-btn-text {
+	font-weight: bold;
+	display: block;
+}
+.a-btn-slide-text {
+	display: block;
+	text-indent: 0.5em;
+	color: #BBB;
+}
