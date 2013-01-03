@@ -11,6 +11,16 @@ Version: 0.1
 Author URI: http://tjl.co/
 */
 
+if(!function_exists('ellistr')) {
+ //Copyright 2006 T.J. Lipscomb
+function ellistr($s,$n) {
+	for ( $x = 0; $x < strlen($s); $x++ ) {
+		$o = ($n+$x >= strlen($s) ? $s : ($s{$n+$x} == " " ? substr($s,0,$n+$x) . "..." : ""));
+		if ( $o != "" ) { return $o; }
+	}
+}
+}
+
 //Bind to various actions needed to hijack the request.
 add_action( 'parse_request', 'upsmart_parse_request' );
 add_action( 'the_posts', 'upsmart_the_posts' );
@@ -22,18 +32,21 @@ require_once dirname(__FILE__).'/templates.php';
 
 //Fix post formatting by removing wpautop
 remove_filter('the_content','wpautop');
+remove_filter('the_content','wptexturize');
 add_filter('the_content','upsmart_filter_content');
 
 function upsmart_filter_content($content){
-	if(get_post_type()=='upsmart') //if it does not work, you may want to pass the current post object to get_post_type
-		return $content;//no autop
+	if(get_post_type()=='upsmart')
+		return $content;//no autop/texturize
 	else
-		return wpautop($content);
+		return wptexturize(wpautop($content));
 }
 
 function upsmart_enqueue_scripts() {
-	wp_register_style('upsmart_page_profiles',plugins_url('css/profiles.css',__FILE__));
-	wp_enqueue_style('upsmart_page_profiles');
+	if(defined('upsmart_handle_page')) {
+		wp_register_style('upsmart_page_'.upsmart_handle_page,plugins_url('css/'.upsmart_handle_page.'.css',__FILE__));
+		wp_enqueue_style('upsmart_page_'.upsmart_handle_page);
+	}
 }
 
 function upsmart_parse_request( &$wp ) {
@@ -52,9 +65,12 @@ function upsmart_the_posts($posts) {
 	//happens.
 	if(!defined('upsmart_handle_page')) return $posts;
 	
+	//Disable canonical redirects for this one page load.
+	remove_filter('template_redirect', 'redirect_canonical');
+	
 	//Create a dummy post
 	$post = new stdClass();
-	$post->ID="upsmart";
+	$post->ID=-9999;
 	$post->post_type = "upsmart";
 	$post->comment_status = 'closed';
 	$post->ping_status = 'closed';

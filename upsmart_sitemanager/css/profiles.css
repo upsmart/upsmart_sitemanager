@@ -1,3 +1,7 @@
+.entry-title {
+	margin-bottom: 12pt;
+}
+
 .company-listing {
 	text-align: center;
 	padding-left: 5px;
@@ -18,6 +22,30 @@
 .company-page-title {
 	font-size: 2em;
 }
+#company-logo {
+	max-width: 100px;
+	max-height: 100px;
+	display: block;
+	margin: 0 auto;
+}
+#company-slogan {
+	font-style: italic;
+	text-align: center;
+}
+#company-sections >div {
+	width: 33%;
+	width: calc(33% - 20px);
+	width: -moz-calc(33% - 20px);
+	width: webkit-calc(33% - 20px);
+	padding: 5px 10px;
+	float: left;
+}
+#company-sections>div:not(:last-child) {
+	width: calc(33% - 21px);
+	width: -moz-calc(33% - 21px);
+	width: webkit-calc(33% - 21px);
+	border-right: 1px solid #EEE;
+}
 
 #link-sidebar {
 	float: left;
@@ -25,7 +53,6 @@
 	width: calc(150px);
 	width: -moz-calc(150px);
 	width: -webkit-calc(150px);
-	border-right: 1px solid #DDD;
 }
 #link-sidebar .image-link>img {
 	max-width: 150px;
@@ -34,9 +61,10 @@
 #company-main-content {
 	float: left;
 	width: 80%;
-	width: calc(100% - 156px);
-	width: -moz-calc(100% - 156px);
-	width: -webkit-calc(100% - 156px);
+	width: calc(100% - 157px);
+	width: -moz-calc(100% - 157px);
+	width: -webkit-calc(100% - 157px);
+	border-left: 1px solid #DDD;
 	padding-left: 5px;
 }
 
@@ -51,4 +79,47 @@
 	display: block;
 	text-indent: 0.5em;
 	color: #BBB;
+}
+
+.person-profile:not(:last-child) {
+	border-right: 1px solid #EEE;
+}
+
+.person-profile {
+	width: 200px;
+	float: left;
+}
+.person-profile>img {
+	max-width: 200px;
+	max-height: 200px;
+}
+.person-profile-header {
+	font-weight: bold;
+	text-align: center;
+}
+.person-profile-title {
+	font-style: italic;
+	text-align: center;
+}
+
+#blog {
+	border-top: 1px solid #DDD;
+}
+/*Put in upsmart theme*/
+.wp-cpl-sc-post {
+	border-bottom: 1px solid #DDD;
+}
+.wp-cpl-sc-post h2 {
+	font-size: 16pt;
+	line-height: 20pt;
+	margin: 0.3em 0;
+}
+.wp-cpl-sc-post h2 a {
+	color: #666;
+}
+.wp-cpl-sc-post h2 a:hover {
+	color: #444;
+}
+.wp-cpl-sc-meta {
+	font-style: italic;
 }

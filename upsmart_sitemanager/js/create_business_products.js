@@ -112,7 +112,7 @@
 			}
 			
 			box.append($("<img/>").attr("src",product.photo));
-			box.append($("<div/>").attr("class","label").html(product.fname+" "+product.lname));
+			box.append($("<div/>").attr("class","label").html(product.name));
 		}
 	}
 	

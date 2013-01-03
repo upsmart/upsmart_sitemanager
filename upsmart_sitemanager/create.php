@@ -143,11 +143,12 @@ EOHTML;
 		
 		if(!empty($_POST)) {
 			$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_business
-							(wordpress_id,name,incorporated,url)
+							(wordpress_id,name,slogan,incorporated,url)
 							VALUES(%d,%s,%d,%s)",
 							array(
 								get_current_user_id(),
 								$_POST['project_name'],
+								$_POST['project_slogan'],
 								($_POST['project_incorporated']=='yes')?1:0,
 								($_POST['project_hassite']=='yes')?$_POST['project_site']:''
 							)
@@ -168,15 +169,18 @@ EOHTML;
 		<h3>Project</h3>
 		<table>
 			<tr><th>Company/Project Name</th><td><input name='project_name' placeholder='Company/Project Name'/></td></tr>
+			<tr><th>Company/Project Slogan</th><td><input name='project_slogan' placeholder='We do awesome stuff.'/></td></tr>
 			<tr><td>Has your company been incorporated?</td>
 				<td>
-					<input type='radio' name='project_incorporated' value='yes'/> Yes<br/>
+					<input type='radio' name='project_incorporated' value='yes'/> Yes
+					&nbsp;&nbsp;&nbsp;&nbsp;
 					<input type='radio' name='project_incorporated' value='no'/> No
 				</td>
 			</tr>
 			<tr><td>Do you have a web site?</td>
 				<td>
-					<input type='radio' name='project_hassite' value='yes'/> Yes<br/>
+					<input type='radio' name='project_hassite' value='yes'/> Yes
+					&nbsp;&nbsp;&nbsp;&nbsp;
 					<input type='radio' name='project_hassite' value='no'/> No
 				</td>
 			</tr>
@@ -308,7 +312,7 @@ EOHTML;
 			
 			$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_profile
 							(wordpress_id,mission,about,history)
-							VALUES(%d,%s,%d,%s)",
+							VALUES(%d,%s,%s,%s)",
 							array(
 								get_current_user_id(),
 								$_POST['mission'],
@@ -335,10 +339,8 @@ EOHTML;
 		$post->post_content .= <<<EOHTML
 		We'd like to know more about you and your company. Just fill out the fields below (everything is required).
 		<form method='post' enctype='multipart/form-data'>
-		<h3>Business Information</h3>
-		<h4>About the Company</h4>
-	<h5>Branding</h5>
-	<br/>
+		<h3>About the Company</h3>
+	<h4>Branding</h4>
 	<table>
 		<tr><th>Logo</th><td><input type='file' name='logo'/></tr>
 		<tr><td colspan='2'>The bigger the better&mdash;don't worry, we'll scale this down for you. This image should have a transparent background and be suitable for display on a colored background.</td></tr>
@@ -346,14 +348,13 @@ EOHTML;
 		<tr><th><br/>Media</th></tr>
 		<tr><td colspan='2'>Now upload the "coolest" piece of media you have. This will be used on the top fold of your generated site to draw users in.
 		<br/><input type='file' name='media1'/><br/>
-		<ul><li>The bigger the better&mdash;don't worry, we'll scale this down for you.</li><li>The uploaded file should have a solid background.</li><li>Accepted Formats: JPG, PNG</li></ul></td></tr>
+		<ul><li>The bigger the better&mdash;don't worry, we'll scale this down for you.</li><li>The uploaded file should have a solid background.</li><li>Accepted Formats: JPG, PNG</li></ul><br/></td></tr>
 		
 		<tr><td colspan='2'>While you're at it, give us the second coolest picture you have as well. Who knows when you might need it?
 		<br/><input type='file' name='media2'/>
 		</td></tr>
 	</table>
-	<h5>About</h5>
-	<br/>
+	<h4>About</h4>
 	<table>
 		<tr><th colspan='2'>Mission Statement</th></tr>
 		<tr><td colspan='2'>Your mission statement should include ...</td></tr>
@@ -423,53 +424,6 @@ EOHTML;
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 		<script src="$js_url"></script>
-		<style type='text/css'>
-			@import url("http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css");
-			#dialog{
-				display: none;
-			}
-			#products {
-				background: #EEE;
-				padding: 1em;
-			}
-			#products>div {
-				cursor: pointer;
-				background: #FFF;
-				width: 150px;
-				height: 150px;
-				display: inline-block;
-				position: relative;
-				vertical-align: middle;
-			}
-			#products>div>img {
-				max-width: 150px;
-				max-height: 150px;
-			}
-			#products>div>.label {
-				position: absolute;
-				bottom: 0px;
-				background: rgba(0,0,0,0.7);
-				color: #FFF;
-				text-shadow: 0 -1px 0 rgba(0,0,0,0.7);
-				font-weight: 600;
-				text-align: center;
-				width: 150px;
-				height: 40px;
-				line-height: 20px;
-			}
-			#new {
-				font-size: 150px;
-				line-height: 150px;
-				text-align: center;
-				color: #888;
-			}
-			input,textarea {
-				vertical-align: top;
-			}
-			textarea {
-				width: 100%;
-			}
-		</style>
 EOHTML;
 		
 		return $post;
@@ -512,12 +466,14 @@ EOHTML;
 					'template' => $company['site']['theme'],
 					'stylesheet' => $company['site']['theme'],
 					
-					'home' => 'http://'.$company['site']['domain'].'/';
-					'siteurl' => 'http://'.$company['site']['domain'].'/';
+					'blogdescription' => $company['business']['slogan'],
+					
+					'home' => 'http://'.$company['site']['domain'].'/',
+					'siteurl' => 'http://'.$company['site']['domain'].'/',
 					'show_on_front' => 'page',
 				);
 				$id = wpmu_create_blog($company['site']['domain'],'/',$company['business']['name'],get_current_user_id(),$meta);
-				$wpdb->query($wpdb->prepare("UPDATE upsmart_business SET site_id=%d,url='http://%s/' WHERE wordpress_id=%d",$id,$company['site']['domain'],get_current_user_id()));
+				$wpdb->query($wpdb->prepare("UPDATE upsmart_business SET site_id=%d,url=%s WHERE wordpress_id=%d",$id,"http://{$company['site']['domain']}/",get_current_user_id()));
 				
 				//This appears necessary for wordpress to understand how to route requests.
 				$wpdb->query($wpdb->prepare("INSERT INTO wp_site (id,domain,path) VALUES(%d,'%s','/')",$id,$company['site']['domain']));
@@ -560,6 +516,7 @@ EOHTML;
 				}
 			
 			//Done? Send them to the "YOU'RE DONE" page.
+			switch_to_blog(1);
 			wp_redirect(home_url('create/8'));
 		}
 		
@@ -567,7 +524,7 @@ EOHTML;
  		$theme_list = wp_get_themes(array('allowed'=>'network'));
  		foreach($theme_list as $n => $t) {
 			//var_dump($t);
-			$themes .= "<div class='theme' style='float: left;'><img src='".content_url('themes/'.$n.'/screenshot.png')."' style='width: 150px'/><br/><input type='radio' name='theme' value='$n'/> {$t->Name}</div>";
+			$themes .= "<div class='theme'><img src='".content_url('themes/'.$n.'/screenshot.png')."' style='width: 150px'/><br/><input type='radio' name='theme' value='$n'/> {$t->Name}</div>";
  		}
 		
 		$post->post_content .= <<<EOHTML

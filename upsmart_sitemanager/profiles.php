@@ -11,14 +11,15 @@
 			default:
 			case '/1': $post = upsmart_page_profiles_company_listing($post); break;
 			case '/9': $post = upsmart_page_profiles_company_home($post); break;
-			case '/10': $post = upsmart_page_profiles_company_mission($post); break;
-			case '/11': $post = upsmart_page_profiles_company_about($post); break;
+			case '/2': $post = upsmart_page_profiles_company_about($post); break;
+			case '/3': $post = upsmart_page_profiles_company_mission($post); break;
+			
 			case '/12': $post = upsmart_page_profiles_company_invest($post); break;
 			case '/13': $post = upsmart_page_profiles_company_invest_checkout($post); break;
 			case '/14': $post = upsmart_page_profiles_company_labs($post); break;
 			//Add more cases
 		}
-		echo "<br/><br/>";
+		$post->post_content .= "<br/><br/>";
 		
 		return $post;
 	}
@@ -53,7 +54,7 @@
 			$url = $row['url'];
 			$about = $row['about'];
 			$logo = home_url($row['logo']);
-			$excerpt = substr($about, strlen($about)/3); 
+			$excerpt = substr($about, 0, strlen($about)/3); 
 			//Assuming database has a default filler company logo image, so it can never fail.
 			list($width, $height) = getimagesize($logo);
 			
@@ -86,7 +87,7 @@ EOHTML;
 		
 		if(!empty($_GET)) {
 			
-			$result = $wpdb->get_row($wpdb->prepare("SELECT B.wordpress_id as id, B.name, B.url, P.logo 
+			$result = $wpdb->get_row($wpdb->prepare("SELECT B.*, P.* 
 						FROM upsmart_business B, upsmart_profile P  
 							WHERE P.wordpress_id = B.wordpress_id AND P.wordpress_id = %d",
 							array(
@@ -104,20 +105,23 @@ EOHTML;
 		$logo = $result['logo'];
 		$linkHome = home_url('profiles/9?id=' . $id);
 		$adopterLink = $companyLink . '/' . $companyLink .'EA';
+		
 		$linkLabs = home_url('profiles/14?id=' . $id);
 		$linkInvest = home_url('profiles/12?id=' . $id);
-		$linkMission = home_url('profiles/10?id=' . $id);
-		$linkAbout = home_url('profiles/11?id=' . $id);
-
-		//Assuming database has a default filler company logo image, so it can never fail.
-		//list($width, $height) = getimagesize($logo);
-		$height = 50;
-		$width = 50;
 		
+		$linkAbout   = home_url('profiles/2?id='.$id);
+		$linkMission = home_url('profiles/3?id='.$id);
+		$linkHistory = home_url('profiles/3?id='.$id."#history");
+		
+		$result['about'] = wpautop(wptexturize(ellistr($result['about'],200)));
+		$result['mission'] = wpautop(wptexturize(ellistr($result['mission'],200)));
+		$result['history'] = wpautop(wptexturize(ellistr($result['history'],200)));
+
 		$post->post_content .= <<<EOHTML
 		<div id="link-sidebar" class="left">
 		    <!-- LOGO IMAGES WERE ORIGINALLY SCALED DOWN IN PHP TO FIT CONTAINER, I HAVE THE CODE IF YOU NEED IT OR YOU CAN USE CSS 3 "Contain" -->
-			<a class="image-link" href="$linkHome"><img src ="$logo" height="$height" width="$width" /></a>
+			<a class="image-link" href="$linkHome"><img id='company-logo' src="$logo" /></a>
+			<div id="company-slogan">{$result['slogan']}</div>
 			<div class="button-wrapper">
 				<a href="http://www.go-upsmart.com/groups/$companyLink" class="a-btn radius">
 					<span class="a-btn-text">Fan Group</span> 
@@ -162,19 +166,24 @@ EOHTML;
 						$post->post_content .= '<iframe width="485" height="280" src="http://youtu.be/b21rTV_MlxQ" frameborder="0" allowfullscreen></iframe>';
 						break;
 					default:
-						$post->post_content .= '<p class="pomotional-warning">No company promotional is present at this time</p>';
+						$post->post_content .= '<p class="promotional-warning">No company promotional is present at this time</p>';
 						break;
 				}
 				
 				
 		$post->post_content .= <<<EOHTML
 		   </div>
-
-			<ul>
-				<li class="left"><a href="$linkAbout"> About Us </a></li>
-				<li class="left"><a href="$linkMission"> Our Mission </a></li>
-			</ul>
-
+			<div id="company-sections">
+			<div><h3><a href='{$linkAbout}'>Who We Are</a></h3>
+			{$result['about']}</div>
+			<div><h3><a href='{$linkMission}'>What We Do</a></h3>
+			{$result['mission']}</div>
+			<div><h3><a href='{$linkHistory}'>How We Got Here</a></h3>
+			{$result['history']}</div>
+			</div>
+			<br style='clear: both'/>
+			<br/>
+			<h3>Recent Posts</h3>
 			<div id="blog" class="clear">
 EOHTML;
 				$companyId = get_category_id($cpName);
@@ -206,13 +215,16 @@ EOHTML;
 		}
 		
 		$company = $result['name'];
-		$mission = $result['mission'];
-		$history = $result['history'];
+		$mission = wpautop(wptexturize($result['mission']));
+		$history = wpautop(wptexturize($result['history']));
+		
+		$homeurl = home_url('profiles/9?id=' . $_GET['id']);
 		
 		$post->post_content .= <<<EOHTML
-		<h3 class = "company-page-title">$company</h3>
+		<h3 class = "company-page-title"><a href='{$homeurl}'>$company</a></h3>
 		<h4 class = "company-page-subHead">Our Mission</h4>
 		<p class = "company-page-text-block">$mission</p>	
+		<a name='history'></a>
 		<h4 class = "company-page-subHead">A Rich History</h4>
 		<p class = "company-page-text-block">$history</p>	
 EOHTML;
@@ -251,12 +263,15 @@ EOHTML;
 		}
 
 		$company = $aboutData['name'];
-		$aboutContent = $aboutData['about'];
+		$aboutContent = wpautop(wptexturize($aboutData['about']));
+		
+		$homeurl = home_url('profiles/9?id=' . $_GET['id']);
 		
 		$post->post_content .= <<<EOHTML
-		<h3 class = "company-page-title">$company</h3>
+		<h3 class = "company-page-title"><a href='{$homeurl}'>$company</a></h3>
 		<h4 class = "company-page-subHead">About Us</h4>
 		<p class = "company-page-text-block">$aboutContent</p>	
+		<h4 class = "company-page-subHead">The People</h4>
 EOHTML;
 	
 		foreach($peopleData as $row){
@@ -266,14 +281,9 @@ EOHTML;
 			$photo= $row['photo'];
 			$email = 'Use company email';
 
-			//Assuming database references a default filler person photo image, so it can never fail.
-			//list($width, $height) = getimagesize($photo);
-			$width = 0;
-			$height = 0;
-			
 			$post->post_content .= <<<EOHTML
 			<div class="person-profile">
-				<img src="$photo" width="$width" height="$height" alt="Photo of $cpname" title="$cpname"/>
+				<img src="$photo" alt="Photo of $cpname" title="$cpname"/>
 				<div class="person-profile-content">
 					<div class="person-profile-header">
 						<span class="person-profile-name">$cpname</span>
@@ -281,7 +291,6 @@ EOHTML;
 					</div>
 					<div class="person-profile-title">$title</div>
 					<p class="person-profile-bio">$bio</p>
-					<div class="person-profile-email"><a href="mailto:nobody@yahoo.com">$email</a></div>
 				</div>
 			</div>
 EOHTML;

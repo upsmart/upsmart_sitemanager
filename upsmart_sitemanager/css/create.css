@@ -1,0 +1,76 @@
+@import "http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css";
+h2, h3, h4, h5 {
+    margin: 0.5em 0;
+}
+h4 {
+    font-size: 14pt;
+    line-height: 16pt;
+}
+th {
+    font-weight: bold;
+}
+table {
+    width: 80%;
+}
+input[type="submit"] {
+    margin: 0.5em auto;
+}
+input, textarea {
+    vertical-align: top;
+}
+textarea {
+    width: 100%;
+}
+ul {
+    list-style: disc outside none;
+    padding-left: 1em;
+}
+#dialog {
+    display: none;
+}
+#products {
+    background: none repeat scroll 0 0 #EEEEEE;
+    padding: 1em;
+}
+#products > div {
+    background: none repeat scroll 0 0 #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    height: 150px;
+    position: relative;
+    vertical-align: middle;
+    width: 150px;
+}
+#products > div > img {
+    max-height: 150px;
+    max-width: 150px;
+}
+#products > div > .label {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.698);
+    bottom: 0;
+    color: #FFFFFF;
+    font-weight: 600;
+    height: 40px;
+    line-height: 20px;
+    position: absolute;
+    text-align: center;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.698);
+    width: 150px;
+}
+#new {
+    color: #888888;
+    font-size: 150px;
+    line-height: 150px;
+    text-align: center;
+}
+.theme {
+    float: left;
+    height: 153px;
+    line-height: 15px;
+    padding: 0 4px;
+    width: 150px;
+}
+.theme > img {
+    height: 113px;
+    width: 150px;
+} 
