@@ -29,11 +29,11 @@ ul {
     display: none;
 }
 #products {
-    background: none repeat scroll 0 0 #EEEEEE;
+    background: #EEEEEE;
     padding: 1em;
 }
 #products > div {
-    background: none repeat scroll 0 0 #FFFFFF;
+    background: #FFFFFF;
     cursor: pointer;
     display: inline-block;
     height: 150px;
@@ -46,7 +46,7 @@ ul {
     max-width: 150px;
 }
 #products > div > .label {
-    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.698);
+    background: rgba(0, 0, 0, 0.698);
     bottom: 0;
     color: #FFFFFF;
     font-weight: 600;
@@ -69,8 +69,32 @@ ul {
     line-height: 15px;
     padding: 0 4px;
     width: 150px;
+	cursor: pointer;
+	text-align: center;
 }
 .theme > img {
     height: 113px;
     width: 150px;
-} 
+}
+
+#feature-list {
+	margin-bottom: 5px;
+}
+#feature-list .feature-container {
+	display: none;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+	border-bottom: 1px solid #ddd;
+}
+#feature-list.expanded .feature-container {
+	display: block;
+}
+.feature-name {
+	font-weight: bold;
+}
+.feature-container .feature-group li {
+	display: inline-block;
+	padding-right: 10px;
+	width: 165px;
+	vertical-align: top;
+}

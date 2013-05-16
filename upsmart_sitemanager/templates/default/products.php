@@ -1,7 +1,8 @@
 <?php
 	class default_products extends upsmart_template {
-		function getName() {return "products";}
-		function getTitle() {return "Products";}
+		static function getName() {return "products";}
+		static function getTitle() {return "Products";}
+		static function getUsedData() {return array('products');}
 		//The __toString function is where it gets applied.
 		function __toString() {
 			$out = '<div id="products">';

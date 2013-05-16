@@ -14,7 +14,4 @@
 		function __construct($n) {
 			$this->data = $n;
 		}
-		
-		abstract function getName();
-		abstract function getTitle();
 	}

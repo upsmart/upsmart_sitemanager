@@ -11,7 +11,7 @@
  
 		init: function() {
 			$("#new").click(upsmart.products.showAddDialog);
-			$("#team .product").live("click",upsmart.products.showEditDialog);
+			$("#products .product").live("click",upsmart.products.showEditDialog);
 			$("#form").submit(upsmart.products.prepareSubmit);
 		},
  
@@ -26,7 +26,7 @@
 				<tr><td colspan='2'>Write about your product in 140 characters or less.<br/><textarea name='shortdesc'></textarea></td></tr> \
 				<tr><th colspan='2'>Full Description</th></tr> \
 				<tr><td colspan='2'>Can be as long as you'd like. Think about: <ul><li>What does it do?</li><li>How does it do it?</li><li>Why is it special?</li></ul><br/><textarea name='fulldesc'></textarea></td></tr> \
-				<tr><th>Photo</th><td><input type='file' name='photo'/></tr> \
+				<tr><th>Photo</th><td><input id='photo_upload' name='photo'/> <input type='button' id='photo_button' value='Open Media Library'/></tr> \
 				<tr><td colspan='2'>Upload a photo of the product. The bigger the better&mdash;don't worry, we'll scale this down for you.</td></tr> \
 			</table>");
 			if(n < upsmart.products.products.length) {
@@ -34,6 +34,7 @@
 				item.find("input[name=name]").attr("value",p.name);
 				item.find("textarea[name=shortdesc]").attr("value",p.shortdesc);
 				item.find("textarea[name=fulldesc]").attr("value",p.fulldesc);
+				item.find("input[name=photo]").attr("value",p.photo);
 			}
 			return item;
 		},
@@ -41,6 +42,7 @@
 		showAddDialog: function() {
 			$("#dialog").data("product",upsmart.products.pcounter);
 			$("#dialog").html(upsmart.products.createForm(upsmart.products.pcounter));
+			$("#photo_button").click(open_media_library);
 			upsmart.products.pcounter++;
 			$("#dialog").dialog({
 				width: 600,
@@ -57,6 +59,7 @@
 			pid = $(this).data("product");
 			$("#dialog").data("product",pid);
 			$("#dialog").html(upsmart.products.createForm(pid));
+			$("#photo_button").click(open_media_library);
 			$("#dialog").dialog({
 				width: 600,
 				modal: true,
@@ -74,31 +77,16 @@
 			
 			
 			var product = {
-				id: $("#dialog").data("product"),
-				name: $("#dialog input[name=name]").attr("value"),
-				shortdesc:   $("#dialog textarea[name=shortdesc]").attr("value"),
-				longdesc:   $("#dialog textarea[name=longdesc]").attr("value"),
-				photo: null,
+				id:        $("#dialog").data("product"),
+				name:      $("#dialog input[name=name]").attr("value"),
+				shortdesc: $("#dialog textarea[name=shortdesc]").attr("value"),
+				longdesc:  $("#dialog textarea[name=longdesc]").attr("value"),
+				photo:     $("#dialog input[name=photo]").attr("value"),
 			}
 			
 			$(this).dialog("close");
 			
-			var file = $("#dialog input[name=photo]")[0].files[0];
-			if(typeof file === 'undefined' || upsmart.products.acceptFileTypes.indexOf(file.type) == -1) {
-				upsmart.products.finishAddProduct(product);
-				return
-			}
-			var reader = new FileReader();
-			//Use a closure to keep access to the product.
-			reader.onload = (function(product) {
-				return function(e) {
-					//Save the photo to the object.
-					product.photo = e.target.result;
-					upsmart.products.finishAddProduct(product);
-				}
-				
-			}(product));
-			reader.readAsDataURL(file);
+			upsmart.products.finishAddProduct(product);
 		},
 		finishAddProduct: function(product) {
 			upsmart.products.products[product.id] = product;

@@ -24,7 +24,7 @@
 				<tr><th>Name</th><td class='twoinput'><input name='pfname' placeholder='Jane'/><input name='plname' placeholder='Smith'/></tr> \
 				<tr><th>Title</th><td><input name='ptitle' placeholder='Chief Executive Officer'/></tr> \
 				<tr><th>Short Bio</th><td><textarea name='pbio'/></textarea></td></tr> \
-				<tr><th>Photo</th><td><input type='file' name='photo'/></tr> \
+				<tr><th>Photo</th><td><input id='photo_upload' name='photo'/> <input type='button' id='photo_button' value='Open Media Library'/></tr> \
 				<tr><td colspan='2'>(Optional) Upload a photo of <acronym title='Replace this with their first name?'>this person</acronym>. The bigger the better&mdash;don't worry, we'll scale this down for you.</td></tr> \
 			</table>");
 			if(n < upsmart.people.people.length) {
@@ -33,6 +33,7 @@
 				item.find("input[name=plname]").attr("value",p.lname);
 				item.find("input[name=ptitle]").attr("value",p.title);
 				item.find("textarea[name=pbio]").attr("value",p.bio);
+				item.find("input[name=photo]").attr("value",p.photo);
 			}
 			return item;
 		},
@@ -40,6 +41,7 @@
 		showAddDialog: function() {
 			$("#dialog").data("person",upsmart.people.pcounter);
 			$("#dialog").html(upsmart.people.createForm(upsmart.people.pcounter));
+			$("#photo_button").click(open_media_library);
 			upsmart.people.pcounter++;
 			$("#dialog").dialog({
 				width: 600,
@@ -56,6 +58,7 @@
 			pid = $(this).data("person");
 			$("#dialog").data("person",pid);
 			$("#dialog").html(upsmart.people.createForm(pid));
+			$("#photo_button").click(open_media_library);
 			$("#dialog").dialog({
 				width: 600,
 				modal: true,
@@ -78,27 +81,12 @@
 				lname: $("#dialog input[name=plname]").attr("value"),
 				title: $("#dialog input[name=ptitle]").attr("value"),
 				bio:   $("#dialog textarea[name=pbio]").attr("value"),
-				photo: null,
+				photo: $("#dialog input[name=photo]").attr("value"),
 			}
 			
 			$(this).dialog("close");
 			
-			var file = $("#dialog input[name=photo]")[0].files[0];
-			if(typeof file === 'undefined' || upsmart.people.acceptFileTypes.indexOf(file.type) == -1) {
-				upsmart.people.finishAddPerson(person);
-				return
-			}
-			var reader = new FileReader();
-			//Use a closure to keep access to the person.
-			reader.onload = (function(person) {
-				return function(e) {
-					//Save the photo to the object.
-					person.photo = e.target.result;
-					upsmart.people.finishAddPerson(person);
-				}
-				
-			}(person));
-			reader.readAsDataURL(file);
+			upsmart.people.finishAddPerson(person);
 		},
 		finishAddPerson: function(person) {
 			upsmart.people.people[person.id] = person;

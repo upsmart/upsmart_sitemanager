@@ -1,0 +1,88 @@
+zone "vulcantechs.com" {
+	type master;
+	file "/home/upsmart/bind/vulcantechs.com.hosts";
+	allow-transfer {
+		75.127.14.195;
+	};
+	also-notify {
+		75.127.14.195;
+	};
+	notify yes;
+};
+zone "projectupsmart.com" {
+	type master;
+	file "/home/upsmart/github/Wordpress/wp-content/plugins/upsmart_sitemanager/bind/projectupsmart.com.hosts";
+	allow-transfer {
+		75.127.14.195;
+	};
+	also-notify {
+		75.127.14.195;
+	};
+	notify yes;
+};
+zone "example.com" {
+	type master;
+	file "/home/upsmart/github/Wordpress/wp-content/plugins/upsmart_sitemanager/bind/example.com.hosts";
+	allow-transfer {
+		75.127.14.195;
+	};
+	also-notify {
+		75.127.14.195;
+	};
+	notify yes;
+};
+zone "things.com" {
+	type master;
+	file "/home/upsmart/github/Wordpress/wp-content/plugins/upsmart_sitemanager/bind/things.com.hosts";
+	allow-transfer {
+		75.127.14.195;
+	};
+	also-notify {
+		75.127.14.195;
+	};
+	notify yes;
+};
+zone "testing.com" {
+	type master;
+	file "/home/upsmart/github/Wordpress/wp-content/plugins/upsmart_sitemanager/bind/testing.com.hosts";
+	allow-transfer {
+		75.127.14.195;
+	};
+	also-notify {
+		75.127.14.195;
+	};
+	notify yes;
+};
+zone "schoolbox.co" {
+	type master;
+	file "/home/upsmart/github/Wordpress/wp-content/plugins/upsmart_sitemanager/bind/schoolbox.co.hosts";
+	allow-transfer {
+		75.127.14.195;
+	};
+	also-notify {
+		75.127.14.195;
+	};
+	notify yes;
+};
+zone "schoolbox2.co" {
+	type master;
+	file "/home/upsmart/github/Wordpress/wp-content/plugins/upsmart_sitemanager/bind/schoolbox2.co.hosts";
+	allow-transfer {
+		75.127.14.195;
+	};
+	also-notify {
+		75.127.14.195;
+	};
+	notify yes;
+};
+zone "testtest.com" {
+	type master;
+	file "/home/upsmart/github/Project-UpSmart/wordpress/wp-content/plugins/upsmart_sitemanager/bind/testtest.com.hosts";
+	allow-transfer {
+		75.127.14.195;
+	};
+	also-notify {
+		75.127.14.195;
+	};
+	notify yes;
+};

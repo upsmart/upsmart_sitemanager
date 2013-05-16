@@ -1,0 +1,20 @@
+$ttl 38400
+@	IN	SOA	ns1.blahblah.upsmart.com. shagen.upsmart.com. (
+			1353970048
+			10800
+			3600
+			604800
+			38400 )
+@	IN	NS	ns1.upsmart.com.
+@	IN	NS	ns2.upsmart.com.
+blahblah.upsmart.com.	IN	A	96.8.113.61
+www.blahblah.upsmart.com.	IN	A	96.8.113.61
+ftp.blahblah.upsmart.com.	IN	A	96.8.113.61
+m.blahblah.upsmart.com.	IN	A	96.8.113.61
+ns1.blahblah.upsmart.com.	IN	A	96.8.113.61
+localhost.blahblah.upsmart.com.	IN	A	127.0.0.1
+webmail.blahblah.upsmart.com.	IN	A	96.8.113.61
+admin.blahblah.upsmart.com.	IN	A	96.8.113.61
+mail.blahblah.upsmart.com.	IN	A	96.8.113.61
+blahblah.upsmart.com.	IN	MX	5 mail.blahblah.upsmart.com.
+blahblah.upsmart.com.	IN	TXT	"v=spf1 a mx a:blahblah.upsmart.com ip4:96.8.113.61 ip4:75.127.14.195 ?all"

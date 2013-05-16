@@ -5,7 +5,7 @@
 	  */
 
 	function upsmart_page_profiles($post) {
-		$post->post_title = 'Company Profiles';
+		$post->post_title = '<a href="'.home_url('profiles/').'">Company Profiles</a>';
 		$post->comment_status = 'closed';
 		switch(upsmart_handle_page_info) {
 			default:
@@ -47,23 +47,20 @@
 		
 		if($result === false) wp_die("An error has occurred: Unable to fetch companies from database.");
 
-		foreach($result as $row){
+		foreach($result as $row) {
 
 			$id = $row['id'];
-			$cpname = $row['name']; 
+			$cpname = $row['name'];
 			$url = $row['url'];
-			$about = $row['about'];
-			$logo = home_url($row['logo']);
-			$excerpt = substr($about, 0, strlen($about)/3); 
+			$excerpt = wpautop(wptexturize(ellistr($row['about'],200)));
 			//Assuming database has a default filler company logo image, so it can never fail.
-			list($width, $height) = getimagesize($logo);
 			
 			$link = home_url('profiles/9?id=' . $id);
 			
 			$post->post_content .= <<<EOHTML
 			<div class="company-listing">
 				<a class="image-link left" href="$link">
-					<img src="$logo" width="$width" height="$height" alt="$cpname company logo"/>
+					<img src="{$row['logo']}" alt="$cpname company logo"/>
 				</a>
 				<span class="listing-info right">
 					<h3><a class="header-link" href="$link">$cpname</a></h3>
@@ -75,6 +72,7 @@
 			</div>
 EOHTML;
 		}
+		$post->post_content .= "<br style='clear: both'/>";
 		return $post;
 	}
 		 
@@ -100,11 +98,11 @@ EOHTML;
 		
 		$id = $_GET['id'];
 		$cpName = $result['name']; 
-		$companyLink = strtolower(str_replace(" ","",$cpName));
+		$companyLink = home_url('groups/'.strtolower(str_replace(" ","",$cpName)));
 		$url = $result['url'];
 		$logo = $result['logo'];
 		$linkHome = home_url('profiles/9?id=' . $id);
-		$adopterLink = $companyLink . '/' . $companyLink .'EA';
+		$adopterLink = home_url('groups/'.strtolower(str_replace(" ","",$cpName)).'EA');
 		
 		$linkLabs = home_url('profiles/14?id=' . $id);
 		$linkInvest = home_url('profiles/12?id=' . $id);
@@ -116,19 +114,19 @@ EOHTML;
 		$result['about'] = wpautop(wptexturize(ellistr($result['about'],200)));
 		$result['mission'] = wpautop(wptexturize(ellistr($result['mission'],200)));
 		$result['history'] = wpautop(wptexturize(ellistr($result['history'],200)));
-
+		
 		$post->post_content .= <<<EOHTML
 		<div id="link-sidebar" class="left">
 		    <!-- LOGO IMAGES WERE ORIGINALLY SCALED DOWN IN PHP TO FIT CONTAINER, I HAVE THE CODE IF YOU NEED IT OR YOU CAN USE CSS 3 "Contain" -->
 			<a class="image-link" href="$linkHome"><img id='company-logo' src="$logo" /></a>
 			<div id="company-slogan">{$result['slogan']}</div>
 			<div class="button-wrapper">
-				<a href="http://www.go-upsmart.com/groups/$companyLink" class="a-btn radius">
+				<a href="$companyLink" class="a-btn radius">
 					<span class="a-btn-text">Fan Group</span> 
 					<span class="a-btn-slide-text">Support!</span>
 					<span class="a-btn-icon-right"><span id="bubble"></span></span>
 				</a>
-				<a href="http://www.go-upsmart.com/groups/$adopterLink" class="a-btn radius">
+				<a href="$adopterLink" class="a-btn radius">
 					<span class="a-btn-text">Early Adopters</span>
 					<span class="a-btn-slide-text">Try it!</span>
 					<span class="a-btn-icon-right"><span id="bulb"></span></span>
@@ -156,7 +154,7 @@ EOHTML;
 		   <div id="mediaFrame">	          
 		         <!-- THIS SECTION NEEDS TO BE COMPLETED ONCE DATABASE SUPPORTS THIS SECTION -->
 EOHTML;
-				$mime_type = null;
+				/*$mime_type = null;
 				switch($mime_type)
 				{
 					case 'image/svg+xml': 
@@ -168,8 +166,8 @@ EOHTML;
 					default:
 						$post->post_content .= '<p class="promotional-warning">No company promotional is present at this time</p>';
 						break;
-				}
-				
+				}*/
+				$post->post_content .= do_shortcode($result['media1']);
 				
 		$post->post_content .= <<<EOHTML
 		   </div>

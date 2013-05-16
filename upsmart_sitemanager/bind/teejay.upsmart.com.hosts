@@ -1,0 +1,20 @@
+$ttl 38400
+@	IN	SOA	ns1.teejay.upsmart.com. shagen.upsmart.com. (
+			1353970048
+			10800
+			3600
+			604800
+			38400 )
+@	IN	NS	ns1.upsmart.com.
+@	IN	NS	ns2.upsmart.com.
+teejay.upsmart.com.	IN	A	96.8.113.61
+www.teejay.upsmart.com.	IN	A	96.8.113.61
+ftp.teejay.upsmart.com.	IN	A	96.8.113.61
+m.teejay.upsmart.com.	IN	A	96.8.113.61
+ns1.teejay.upsmart.com.	IN	A	96.8.113.61
+localhost.teejay.upsmart.com.	IN	A	127.0.0.1
+webmail.teejay.upsmart.com.	IN	A	96.8.113.61
+admin.teejay.upsmart.com.	IN	A	96.8.113.61
+mail.teejay.upsmart.com.	IN	A	96.8.113.61
+teejay.upsmart.com.	IN	MX	5 mail.teejay.upsmart.com.
+teejay.upsmart.com.	IN	TXT	"v=spf1 a mx a:teejay.upsmart.com ip4:96.8.113.61 ip4:75.127.14.195 ?all"

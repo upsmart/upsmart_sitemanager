@@ -26,8 +26,11 @@ add_action( 'parse_request', 'upsmart_parse_request' );
 add_action( 'the_posts', 'upsmart_the_posts' );
 add_action( 'wp_enqueue_scripts', 'upsmart_enqueue_scripts' );
 
+require_once dirname(__FILE__).'/create_functions.php';
+require_once dirname(__FILE__).'/create_admin.php';
 require_once dirname(__FILE__).'/create.php';
 require_once dirname(__FILE__).'/profiles.php';
+require_once dirname(__FILE__).'/profiles_shortcode.php';
 require_once dirname(__FILE__).'/templates.php';
 
 //Fix post formatting by removing wpautop
