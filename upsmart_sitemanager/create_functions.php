@@ -280,8 +280,8 @@ EOHTML;
 			}
 		</script>
 		<style type="text/css">
-			#TB_overlay {z-index: 2000;}
-			#TB_window {z-index: 2002;}
+			#TB_overlay {z-index: 2000 !important;}
+			#TB_window {z-index: 2002 !important;}
 		</style>
 		<div id='team'>
 		<div id='new'>+</div></div>
@@ -364,8 +364,8 @@ EOHTML;
 			}
 		</script>
 		<style type="text/css">
-			#TB_overlay {z-index: 2000;}
-			#TB_window {z-index: 2002;}
+			#TB_overlay {z-index: 2000 !important;}
+			#TB_window {z-index: 2002 !important;}
 		</style>
 		<div id='products'>
 		<div id='new'>+</div></div>
