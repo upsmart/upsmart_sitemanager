@@ -1,5 +1,9 @@
 .entry-title {
 	margin-bottom: 12pt;
+	font-size: large;
+}
+.entry-title, .entry-title a{
+	color: #5bf !important;
 }
 
 .company-listing {
@@ -9,6 +13,9 @@
 	width: calc(33% - 5px);
 	width: -moz-calc(33% - 5px);
 	width: -webkit-calc(33% - 5px);
+	float: left;
+}
+.image-link{
 	float: left;
 }
 .company-listing  .image-link>img {
@@ -27,6 +34,9 @@
 	max-height: 100px;
 	display: block;
 	margin: 0 auto;
+}
+#company-title{
+	height: 65px;
 }
 #company-slogan {
 	font-style: italic;
@@ -123,3 +133,4 @@
 .wp-cpl-sc-meta {
 	font-style: italic;
 }
+

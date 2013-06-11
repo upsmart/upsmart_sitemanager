@@ -116,10 +116,15 @@ EOHTML;
 		$result['history'] = wpautop(wptexturize(ellistr($result['history'],200)));
 		
 		$post->post_content .= <<<EOHTML
-		<div id="link-sidebar" class="left">
+		<div id="company-title">
+
 		    <!-- LOGO IMAGES WERE ORIGINALLY SCALED DOWN IN PHP TO FIT CONTAINER, I HAVE THE CODE IF YOU NEED IT OR YOU CAN USE CSS 3 "Contain" -->
 			<a class="image-link" href="$linkHome"><img id='company-logo' src="$logo" /></a>
-			<div id="company-slogan">{$result['slogan']}</div>
+		<div><h3 class = "company-page-title">$cpName</h3>
+		<div id="company-slogan">{$result['slogan']}</div>
+		</div>
+		</div>
+		<div id="link-sidebar" class="left">
 			<div class="button-wrapper">
 				<a href="$companyLink" class="a-btn radius">
 					<span class="a-btn-text">Fan Group</span> 
@@ -150,7 +155,6 @@ EOHTML;
 	   <!-- I LEFT OUT THE SOCIAL LINKS SIDEBAR AS I THINK SAM WANTS TO DO SOEMTHING ELSE WITH IT OR PUT THE LINKS SOMEWHERE ELSE. TALK TO HIM ABOUT THAT UI SHIFT -->
 		
 	   <div id="company-main-content" class="left">
-		   <h3 class = "company-page-title">$cpName</h3>
 		   <div id="mediaFrame">	          
 		         <!-- THIS SECTION NEEDS TO BE COMPLETED ONCE DATABASE SUPPORTS THIS SECTION -->
 EOHTML;
