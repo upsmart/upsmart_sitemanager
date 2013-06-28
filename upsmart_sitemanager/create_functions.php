@@ -249,15 +249,18 @@ EOHTML;
 	        }
  
 	    </SCRIPT>
+	<h3>Company Milestones</h3>
+	<p>Below, share any milestone achievements of your company.  These could be first-hires, funding that you've received, revenue achievements, or anything else.</p>
     
 	    <INPUT type="button" value="Add Row" onclick="addRow('dataTable')" />
  
 	    <INPUT type="button" value="Delete Row" onclick="deleteRow('dataTable')" />
  
+
 	    <TABLE id="dataTable" width="350px" border="1">
 	        <TR>
         	    <TD><INPUT type="checkbox" name="chk"/></TD>
-	            <TD> 
+	            <TD>
 			<select name="month">
 				<option value="1">January
 				<option value="2">February
@@ -306,10 +309,29 @@ EOHTML;
 				<option value="31">31
 			</select>
 			<select name="year">
-				<option value="2002">2002
-				<option value="2003">2003
-				<option value="2004">2004
+				<option value="2013">2013
+				<option value="2012">2012
+				<option value="2011">2011
+				<option value="2010">2010
+				<option value="2009">2009
+				<option value="2008">2008
+				<option value="2007">2007
+				<option value="2006">2006
 				<option value="2005">2005
+				<option value="2004">2004
+				<option value="2003">2003
+				<option value="2002">2002
+				<option value="2001">2001
+				<option value="2000">2000
+				<option value="1999">1999
+				<option value="1998">1998
+				<option value="1997">1997
+				<option value="1996">1996
+				<option value="1995">1995
+				<option value="1994">1994
+				<option value="1992">1992
+				<option value="1991">1991
+				<option value="1990">1990
 			</select>
 		    </TD>
 	            <TD> <INPUT type="text" /> </TD>
