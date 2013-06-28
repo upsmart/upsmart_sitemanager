@@ -197,11 +197,125 @@ EOHTML;
 	$out .= upsmart_get_editor($data['history'],'history');
 	$out .= <<<EOHTML
 		</td></tr>
-		
-		<tr><th colspan='2'><input type='submit' value='Save'/></th></tr>
 	</table>
 			
 		</table>
+		
+	    <SCRIPT language="javascript">
+	        function addRow(tableID) {
+ 
+ 	           var table = document.getElementById(tableID);
+ 
+        	    var rowCount = table.rows.length;
+	            var row = table.insertRow(rowCount);
+ 
+        	    var cell1 = row.insertCell(0);
+	            var element1 = document.createElement("input");
+	            element1.type = "checkbox";
+	            element1.name="chkbox[]";
+	            cell1.appendChild(element1);
+ 
+        	    var cell2 = row.insertCell(1);
+	            cell2.innerHTML = rowCount + 1;
+ 
+ 	           var cell3 = row.insertCell(2);
+        	    var element2 = document.createElement("input");
+	            element2.type = "text";
+	            element2.name = "txtbox[]";
+	            cell3.appendChild(element2);
+ 
+ 
+        	}
+ 
+	        function deleteRow(tableID) {
+        	    try {
+	            var table = document.getElementById(tableID);
+	            var rowCount = table.rows.length;
+ 
+        	    for(var i=0; i<rowCount; i++) {
+	                var row = table.rows[i];
+        	        var chkbox = row.cells[0].childNodes[0];
+                	if(null != chkbox && true == chkbox.checked) {
+	                    table.deleteRow(i);
+        	            rowCount--;
+                	    i--;
+	                }
+ 
+ 
+ 	           }
+        	    }catch(e) {
+	                alert(e);
+	            }
+	        }
+ 
+	    </SCRIPT>
+    
+	    <INPUT type="button" value="Add Row" onclick="addRow('dataTable')" />
+ 
+	    <INPUT type="button" value="Delete Row" onclick="deleteRow('dataTable')" />
+ 
+	    <TABLE id="dataTable" width="350px" border="1">
+	        <TR>
+        	    <TD><INPUT type="checkbox" name="chk"/></TD>
+	            <TD> 
+			<select name="month">
+				<option value="1">January
+				<option value="2">February
+				<option value="3">March
+				<option value="4">April
+				<option value="5">May
+				<option value="6">June
+				<option value="7">July
+				<option value="8">August
+				<option value="9">September
+				<option value="10">October
+				<option value="11">November
+				<option value="12">December
+			</select>
+			<select name="day">
+				<option value="1">1
+				<option value="2">2
+				<option value="3">3
+				<option value="4">4
+				<option value="5">5
+				<option value="6">6
+				<option value="7">7
+				<option value="8">8
+				<option value="9">9
+				<option value="10">10
+				<option value="11">11
+				<option value="12">12
+				<option value="13">13
+				<option value="14">14
+				<option value="15">15
+				<option value="16">16
+				<option value="17">17
+				<option value="18">18
+				<option value="19">19
+				<option value="20">20
+				<option value="21">21
+				<option value="22">22
+				<option value="23">23
+				<option value="24">24
+				<option value="25">25
+				<option value="26">26
+				<option value="27">27
+				<option value="28">28
+				<option value="29">29
+				<option value="30">30
+				<option value="31">31
+			</select>
+			<select name="year">
+				<option value="2002">2002
+				<option value="2003">2003
+				<option value="2004">2004
+				<option value="2005">2005
+			</select>
+		    </TD>
+	            <TD> <INPUT type="text" /> </TD>
+	        </TR>
+		<tr><th colspan='2'><input type='submit' value='Save'/></th></tr>
+	    </TABLE>
 		</form>
 EOHTML;
 		return $out;
