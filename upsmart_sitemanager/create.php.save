@@ -46,7 +46,7 @@
 			case '/2': $post = upsmart_page_create_clientinfo($post); break;
 			case '/3': $post = upsmart_page_create_business_basic($post); break;
 			case '/4': $post = upsmart_page_create_business_people($post); break;
-			case '/5': $post = upsmart_page_create_milestones($post); break;
+			case '/5': $post = upsmart_page_create_business_desc($post); break;
 			case '/6': $post = upsmart_page_create_products($post); break;
 			case '/7': $post = upsmart_page_create_technical($post); break;
 			case '/8': $post = upsmart_page_create_done($post); break;
@@ -155,27 +155,27 @@ EOHTML;
 		return $post;
 	}
 	
-	function upsmart_page_create_milestones($post) {
+	function upsmart_page_create_business_desc($post) {
 		global $wpdb;
 		
 		upsmart_require_login();
 		
-		$post->post_content = upsmart_page_create_nav(3,3).'<h2>Milestones</h2>';
+		$post->post_content = upsmart_page_create_nav(3,3).'<h2>Business Information</h2>';
 		
 		if(!empty($_POST)) {
-			$result = upsmart_create_milestones_save();
+			$result = upsmart_create_profile_save();
 			if($result === false) wp_die("An error has occurred.");
 			wp_redirect(home_url('create/6'));
  			exit();
-      
 		}
 		
+		upsmart_create_profile_scripts();
 		
 		$post->post_content .= <<<EOHTML
 		We'd like to know more about you and your company. Just fill out the fields below (everything is required).
 		<h3>About the Company</h3>
 EOHTML;
-		$post->post_content .= upsmart_create_milestones_form();
+		$post->post_content .= upsmart_create_profile_form();
 		return $post;
 	}
 	
