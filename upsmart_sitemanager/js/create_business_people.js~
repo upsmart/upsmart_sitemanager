@@ -32,8 +32,6 @@
 				<tr><th>Education</th><td><textarea name='pedu'/></textarea></td></tr> \
 				<tr><th>Relevant Skills</th><td><textarea name='pskills'/></textarea></td></tr> \
 				<tr><th>Professional Experience</th><td><textarea name='pprof'/></textarea></td></tr> \
-				<tr><th>Awards&Recognition</th><td><textarea name='pawards'/></textarea></td></tr> \
-				
 				</table>\
 				<br/>\
 				<table>\

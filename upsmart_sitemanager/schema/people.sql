@@ -6,6 +6,8 @@ CREATE TABLE `upsmart_people` (
   `title` varchar(100) DEFAULT NULL,
   `bio` tinytext,
   `photo` longtext,
+  `owner` tinyint
+  `percent_owner` tinyint
   PRIMARY KEY (`person_id`),
   KEY `wordpress_id` (`wordpress_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;

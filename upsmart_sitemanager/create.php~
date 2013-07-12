@@ -135,10 +135,9 @@ EOHTML;
 		$post->post_content = upsmart_page_create_nav(3,2).'<h2>Business Information</h2>';
 		
 		if(!empty($_POST)) {
-			$result = upsmart_create_people_save();
+			$result = upsmart_create_people_test();
 			if($result === false) wp_die("An error has occurred.");
-			
-			wp_redirect(home_url('create/5'));
+
  			exit();
 		}
 
@@ -166,7 +165,8 @@ EOHTML;
 			$result = upsmart_create_milestones_save();
 			if($result === false) wp_die("An error has occurred.");
 			wp_redirect(home_url('create/6'));
- 			exit();
+
+			exit();
       
 		}
 		

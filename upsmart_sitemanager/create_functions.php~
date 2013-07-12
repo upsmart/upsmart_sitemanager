@@ -471,20 +471,36 @@ EOHTML;
 
 	function upsmart_create_milestones_save() {
 		global $wpdb;
-		$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_milestones
+		$i = 0;
+		$wpid = get_current_user_id();
+		mysql_query("DELETE FROM upsmart_milestones WHERE wordpress_id=".$wpid."") or die(mysql_error());
+		foreach ($_POST["txt"] as $txt_value){
+
+			$day = $_POST["day"][$i];
+			$month = $_POST["month"][$i];
+			$year = $_POST["year"][$i];
+			$txt = $_POST["txt"][$i];
+			
+			$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_milestones
 		                                      (wordpress_id,month,day,year,description)
 		                                      VALUES(%d,%d,%d,%d,%s)",
 		                                      array(
 		                                          get_current_user_id(),
-		                                          $_POST['month'],
-		                                          $_POST['day'],
-		                                          $_POST['year'],
-		                                          $_POST['txt'],
+		                                          $month,
+		                                          $day,
+		                                          $year,
+		                                          $txt,
 		                                      )
-		));
-		
-		if($result === false) return false;
-		return true;
+			));
+			echo "<br/>";
+			echo "The variable I equals".$i;
+			echo mysql_error();
+
+			$i++;
+
+		}
+			if($result === false) return false;
+			return true;
 	}
 
 	
@@ -544,6 +560,24 @@ EOHTML;
 EOHTML;
 		return $out;
 	}
+	function upsmart_create_people_test(){
+		global $wpdb;
+		$data = json_decode(stripslashes($_POST['json']));
+		echo $_POST['json']."<br/><br/><br/><br/>";
+		echo "hello world! <br />";
+		foreach($data as $p) {
+			echo $p->fname."<br>/>";
+			echo $p->lname."<br>/>";
+			echo $p->title."<br>/>";
+			echo $p->bio."<br>/>";
+			echo $p->photo."<br>/>";
+			echo $p->owner."<br>/>";
+			echo $p->ownership_percentage."<br>/>";
+
+		}
+		return true;
+	}
+
 	function upsmart_create_people_save() {
 		global $wpdb;
 		
@@ -554,8 +588,8 @@ EOHTML;
 		foreach($data as $p) {
 			if($p == null) continue;
 			$result = $wpdb->query($wpdb->prepare("INSERT INTO upsmart_people
-							(wordpress_id,fname,lname,title,bio,photo)
-							VALUES(%d,%s,%s,%s,%s,%s)",
+							(wordpress_id,fname,lname,title,bio,photo,owner,percent_owner)
+							VALUES(%d,%s,%s,%s,%s,%s,%d,%d)",
 							array(
 								get_current_user_id(),
 								$p->fname,
@@ -563,12 +597,15 @@ EOHTML;
 								$p->title,
 								$p->bio,
 								$p->photo,
+								$p->owner,
+								$p->ownership__percentage,
 							)
 			));
-			
+			echo mysql_error();
+
 			if($result === false) return false;
 		}
-		
+		echo $_POST['jason'];
 		return true;
 	}
 	

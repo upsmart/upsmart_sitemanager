@@ -388,7 +388,7 @@ EOHTML;
 		<TR>
 			<TD><INPUT type="checkbox" name="chk[]"/></TD>
 			<TD>
-			<select name="month">
+			<select name="month[]">
 				<option value="1">January</option>
 				<option value="2">February</option>
 				<option value="3">March</option>
@@ -402,7 +402,7 @@ EOHTML;
 				<option value="11">November</option>
 				<option value="12">December</option>
 			</select>
-			<select name="day">
+			<select name="day[]">
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -435,7 +435,7 @@ EOHTML;
 				<option value="30">30</option>
 				<option value="31">31</option>
 			</select>
-			<select name="year">
+			<select name="year[]">
 				<option value="2013">2013</option>
 				<option value="2012">2012</option>
 				<option value="2011">2011</option>
@@ -461,7 +461,7 @@ EOHTML;
 				<option value="1990">1990</option>
 			</select>
 			</TD>
-			<TD> <INPUT type="text" name="txt"/> </TD>
+			<TD> <INPUT type="text" name="txt[]"/> </TD>
 			</TR>
 		</TABLE>
 		<input type='submit' value='Save'/>
@@ -471,20 +471,36 @@ EOHTML;
 
 	function upsmart_create_milestones_save() {
 		global $wpdb;
-		$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_milestones
+		$i = 0;
+		$wpid = get_current_user_id();
+		mysql_query("DELETE FROM upsmart_milestones WHERE wordpress_id=".$wpid."") or die(mysql_error());
+		foreach ($_POST["txt"] as $txt_value){
+
+			$day = $_POST["day"][$i];
+			$month = $_POST["month"][$i];
+			$year = $_POST["year"][$i];
+			$txt = $_POST["txt"][$i];
+			
+			$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_milestones
 		                                      (wordpress_id,month,day,year,description)
 		                                      VALUES(%d,%d,%d,%d,%s)",
 		                                      array(
 		                                          get_current_user_id(),
-		                                          $_POST['month'],
-		                                          $_POST['day'],
-		                                          $_POST['year'],
-		                                          $_POST['txt'],
+		                                          $month,
+		                                          $day,
+		                                          $year,
+		                                          $txt,
 		                                      )
-		));
-		
-		if($result === false) return false;
-		return true;
+			));
+			echo "<br/>";
+			echo "The variable I equals".$i;
+			echo mysql_error();
+
+			$i++;
+
+		}
+			if($result === false) return false;
+			return true;
 	}
 
 	
@@ -544,6 +560,24 @@ EOHTML;
 EOHTML;
 		return $out;
 	}
+	function upsmart_create_people_test(){
+		global $wpdb;
+		$data = json_decode(stripslashes($_POST['json']));
+		echo $_POST['json']."<br/><br/><br/><br/>";
+		echo "hello world! <br />";
+		foreach($data as $p) {
+			echo $p->fname."<br>/>";
+			echo $p->lname."<br>/>";
+			echo $p->title."<br>/>";
+			echo $p->bio."<br>/>";
+			echo $p->photo."<br>/>";
+			echo $p->owner."<br>/>";
+			echo $p->ownership_percentage."<br>/>";
+
+		}
+		return true;
+	}
+
 	function upsmart_create_people_save() {
 		global $wpdb;
 		
@@ -554,8 +588,8 @@ EOHTML;
 		foreach($data as $p) {
 			if($p == null) continue;
 			$result = $wpdb->query($wpdb->prepare("INSERT INTO upsmart_people
-							(wordpress_id,fname,lname,title,bio,photo)
-							VALUES(%d,%s,%s,%s,%s,%s)",
+							(wordpress_id,fname,lname,title,bio,photo,owner,percent_owner)
+							VALUES(%d,%s,%s,%s,%s,%s,%d,%d)",
 							array(
 								get_current_user_id(),
 								$p->fname,
@@ -563,12 +597,15 @@ EOHTML;
 								$p->title,
 								$p->bio,
 								$p->photo,
+								$p->owner,
+								$p->ownership_percentage,
 							)
 			));
-			
+			echo mysql_error();
+
 			if($result === false) return false;
 		}
-		
+		echo $_POST['jason'];
 		return true;
 	}
 	

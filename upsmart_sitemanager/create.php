@@ -137,7 +137,6 @@ EOHTML;
 		if(!empty($_POST)) {
 			$result = upsmart_create_people_save();
 			if($result === false) wp_die("An error has occurred.");
-			
 			wp_redirect(home_url('create/5'));
  			exit();
 		}
@@ -166,7 +165,8 @@ EOHTML;
 			$result = upsmart_create_milestones_save();
 			if($result === false) wp_die("An error has occurred.");
 			wp_redirect(home_url('create/6'));
- 			exit();
+
+			exit();
       
 		}
 		
