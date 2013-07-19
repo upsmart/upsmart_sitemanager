@@ -23,16 +23,28 @@
 			<li".($n==1?" class='active'":"").">1. Sign In</li>
 			<li".($n==2?" class='active'":"")."><a href='{$base}2'>2. Client Info</a></li>
 			<li".($n==3?" class='active'":"")."><a href='{$base}3'>3. Business Info</a></li>
-			<li".($n==4?" class='active'":"")."><a href='{$base}7'>4. Technical Info</a></li>
+			<li".($n==4?" class='active'":"")."><a href='{$base}9'>4. Financial</a></li>
 		</ol><br style='clear: both'/>";
 		
 		if($sn != null) {
-			$out .= "<ol class='steps substeps'>
-				<li".($sn==1?" class='active'":"")."><a href='{$base}3'>a. Basic Info</a></li>
-				<li".($sn==2?" class='active'":"")."><a href='{$base}4'>b. The Team</a></li>
-				<li".($sn==3?" class='active'":"")."><a href='{$base}5'>c. About the Company</a></li>
-				<li".($sn==4?" class='active'":"")."><a href='{$base}6'>d. Products</a></li>
-			</ol><br style='clear: both'/>";
+			if($n==3) {
+				$out .= "<ol class='steps substeps'>
+					<li".($sn==1?" class='active'":"")."><a href='{$base}3'>a. Basic Info</a></li>
+					<li".($sn==2?" class='active'":"")."><a href='{$base}4'>b. The Team</a></li>
+					<li".($sn==3?" class='active'":"")."><a href='{$base}5'>c. About the Company</a></li>
+					<li".($sn==4?" class='active'":"")."><a href='{$base}6'>d. Products</a></li>
+					<li".($sn==5?" class='active'":"")."><a href='{$base}7'>e. Milestones</a></li>
+					<li".($sn==6?" class='active'":"")."><a href='{$base}8'>f. Company Description</a></li>
+				</ol><br style='clear: both'/>";
+			}
+			if($n==4) {
+				$out .= "<ol class='steps substeps'>
+					<li".($sn==1?" class='active'":"")."><a href='{$base}9'>a. Financial Overview</a></li>
+					<li".($sn==2?" class='active'":"")."><a href='{$base}10'>b. Applicant</a></li>
+					<li".($sn==3?" class='active'":"")."><a href='{$base}11'>c. Company</a></li>
+					<li".($sn==4?" class='active'":"")."><a href='{$base}11'>d. Legal Documents</a></li>
+				</ol><br style='clear: both'/>";
+			}
 		}
 		
 		return $out;
@@ -46,10 +58,15 @@
 			case '/2': $post = upsmart_page_create_clientinfo($post); break;
 			case '/3': $post = upsmart_page_create_business_basic($post); break;
 			case '/4': $post = upsmart_page_create_business_people($post); break;
-			case '/5': $post = upsmart_page_create_milestones($post); break;
+			case '/5': $post = upsmart_page_create_business_desc($post); break;
 			case '/6': $post = upsmart_page_create_products($post); break;
-			case '/7': $post = upsmart_page_create_technical($post); break;
-			case '/8': $post = upsmart_page_create_done($post); break;
+			case '/7': $post = upsmart_page_create_milestones($post); break;
+			case '/8': $post = upsmart_page_create_companydescription($post); break;
+			case '/9': $post = upsmart_page_create_financial($post); break;
+			case '/10': $post = upsmart_page_create_financial_applicant($post); break;
+			case '/11'; $post = upsmart_page_create_financial_business($post); break;
+			case '/12'; $post = upsmart_page_create_docupload($post); break;
+			case '/98': $post = upsmart_page_create_done($post); break;
 			case '/1111': $post = upsmart_page_create_clean($post); break;
 			case '/2222': $post = upsmart_page_create_delete($post); break;
 		}
@@ -153,7 +170,31 @@ EOHTML;
 		
 		return $post;
 	}
-	
+
+	function upsmart_page_create_business_desc($post) {
+		global $wpdb;
+		
+		upsmart_require_login();
+		
+		$post->post_content = upsmart_page_create_nav(3,3).'<h2>Business Information</h2>';
+		
+		if(!empty($_POST)) {
+			$result = upsmart_create_profile_save();
+			if($result === false) wp_die("An error has occurred.");
+			wp_redirect(home_url('create/6'));
+ 			exit();
+		}
+		
+		upsmart_create_profile_scripts();
+		
+		$post->post_content .= <<<EOHTML
+		We'd like to know more about you and your company. Just fill out the fields below (everything is required).
+		<h3>About the Company</h3>
+EOHTML;
+		$post->post_content .= upsmart_create_profile_form();
+		return $post;
+	}
+
 	function upsmart_page_create_milestones($post) {
 		global $wpdb;
 		
@@ -207,6 +248,71 @@ EOHTML;
 		return $post;
 	}
 	
+	function upsmart_page_create_financial($post) {
+		global $wpdb;
+		
+		upsmart_require_login();
+		
+		$post->post_content = upsmart_page_create_nav(4,1).'<h2>Extended Company Description</h2>';
+		
+		if(!empty($_POST)) {
+			$result = upsmart_create_financial_save();
+			if($result === false) wp_die("An error has occurred.");
+			wp_redirect(home_url('create/10'));
+			exit();
+		}
+		
+		$post->post_content .= "Next, we are going to ask you for some financial information pertaining to both yourself and your company.  While we give you the option of which parts you would like to provide, you will likely need to provide all of the following information in order to get a good deal.  Lenders usually look into the history of both the applicant and that of the company as part of their due diligence.";
+		$post->post_content .= upsmart_create_financial_form();
+		
+		return $post;
+	}
+
+	function upsmart_page_create_financial_applicant($post) {
+		global $wpdb;
+		
+		upsmart_require_login();
+		
+		$post->post_content = upsmart_page_create_nav(4,2).'<h2>Personal Financial Statement</h2>';
+		
+		if(!empty($_POST)) {
+			$result = upsmart_create_financial_applicant_save();
+			if($result === false) wp_die("An error has occurred.");
+			wp_redirect(home_url('create/11'));
+ 			exit();
+		}
+		
+		
+		$post->post_content .= <<<EOHTML
+		We'd like to know more about you and your company. Just fill out the fields below (everything is required).
+		<h3>About the Company</h3>
+EOHTML;
+		$post->post_content .= upsmart_create_financial_applicant_form();
+		return $post;
+	}
+
+	function upsmart_page_create_companydescription($post) {
+		global $wpdb;
+		
+		upsmart_require_login();
+		
+		$post->post_content = upsmart_page_create_nav(3,6).'<h2>Extended Company Description</h2>';
+		
+		if(!empty($_POST)) {
+			$result = upsmart_create_companydescription_save();
+			if($result === false) wp_die("An error has occurred.");
+			wp_redirect(home_url('create/9'));
+			exit();
+		}
+
+		upsmart_create_profile_scripts();
+		
+		$post->post_content .= "We'd like to know more about you and your company. Just fill out the fields below (everything is required).";
+		$post->post_content .= upsmart_create_companydescription_form();
+		
+		return $post;
+	}
+
 	function upsmart_page_create_technical($post) {
 		global $wpdb;
 		

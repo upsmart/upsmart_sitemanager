@@ -292,7 +292,7 @@ EOHTML;
 	    </TABLE>
 	    <p>Input 1: <input type="text" name="input1"/></p>
 		<input type='submit' value='Save'/>
-		</form>
+		</form>	
 EOHTML;
 		return $out;
 	}
@@ -360,114 +360,85 @@ EOHTML;
 
 	function upsmart_create_milestones_form() {
 		global $wpdb;
-		$data = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_test WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
-		
-		$inc = array(
-			'yes' => ($data['incorporated']==1)?'checked="checked"':'',
-			'no' => ($data['incorporated']!=1)?'checked="checked"':'',
-		);
-		
-		$site = array(
-			'yes' => ($data['has']==1)?'checked="checked"':'',
-			'no' => ($data['incorporated']!=1)?'checked="checked"':'',
-		);
-		
-		return <<<EOHTML
+		$data = $wpdb->get_results($wpdb->prepare("SELECT * FROM upsmart_milestones WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$months = array('January','February','March','April','May','June','July ','August','September','October','November','December');
+		var_dump($data);
+// 		echo "<br/>";
+		var_dump($months);
+		echo <<<EOHTML
 		<form method='post'>
-		<h3>Project</h3>
-		<h3>Company Milestones</h3>
-		<p>Below, share any milestone achievements of your company.  These could be first-hires, funding that you've received, revenue achievements, or anything else.</p>
-		<script type="text/javascript" src="http://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_business_milestone.js"></script>
-	     
-		<INPUT type="button" value="Add Row" onclick="addRow('dataTable')" />
- 
-		<INPUT type="button" value="Delete Row" onclick="deleteRow('dataTable')" />
- 
-
-		<TABLE id="dataTable" width="350px" border="1">
-		<TR>
-			<TD><INPUT type="checkbox" name="chk[]"/></TD>
-			<TD>
-			<select name="month[]">
-				<option value="1">January</option>
-				<option value="2">February</option>
-				<option value="3">March</option>
-				<option value="4">April</option>
-				<option value="5">May</option>
-				<option value="6">June</option>
-				<option value="7">July</option>
-				<option value="8">August</option>
-				<option value="9">September</option>
-				<option value="10">October</option>
-				<option value="11">November</option>
-				<option value="12">December</option>
-			</select>
-			<select name="day[]">
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-				<option value="6">6</option>
-				<option value="7">7</option>
-				<option value="8">8</option>
-				<option value="9">9</option>
-				<option value="10">10</option>
-				<option value="11">11</option>
-				<option value="12">12</option>
-				<option value="13">13</option>
-				<option value="14">14</option>
-				<option value="15">15</option>
-				<option value="16">16</option>
-				<option value="17">17</option>
-				<option value="18">18</option>
-				<option value="19">19</option>
-				<option value="20">20</option>
-				<option value="21">21</option>
-				<option value="22">22</option>
-				<option value="23">23</option>
-				<option value="24">24</option>
-				<option value="25">25</option>
-				<option value="26">26</option>
-				<option value="27">27</option>
-				<option value="28">28</option>
-				<option value="29">29</option>
-				<option value="30">30</option>
-				<option value="31">31</option>
-			</select>
-			<select name="year[]">
-				<option value="2013">2013</option>
-				<option value="2012">2012</option>
-				<option value="2011">2011</option>
-				<option value="2010">2010</option>
-				<option value="2009">2009</option>
-				<option value="2008">2008</option>
-				<option value="2007">2007</option>
-				<option value="2006">2006</option>
-				<option value="2005">2005</option>
-				<option value="2004">2004</option>
-				<option value="2003">2003</option>
-				<option value="2002">2002</option>
-				<option value="2001">2001</option>
-				<option value="2000">2000</option>
-				<option value="1999">1999</option>
-				<option value="1998">1998</option>
-				<option value="1997">1997</option>
-				<option value="1996">1996</option>
-				<option value="1995">1995</option>
-				<option value="1994">1994</option>
-				<option value="1992">1992</option>
-				<option value="1991">1991</option>
-				<option value="1990">1990</option>
-			</select>
-			</TD>
-			<TD> <INPUT type="text" name="txt[]"/> </TD>
-			</TR>
-		</TABLE>
+			<h3>Project</h3>
+			<h3>Company Milestones</h3>
+			<p>Below, share any milestone achievements of your company.  These could be first-hires, funding that you've received, revenue achievements, or anything else.</p>
+			<script type="text/javascript" src="http://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_business_milestone.js"></script>
+			<input type="button" value="Add Row" onclick="addRow('dataTable')" />
+			<input type="button" value="Delete Row" onclick="deleteRow('dataTable')" />
+			
+			<table id="dataTable" width="350px" border="1">
+EOHTML;
+		foreach($data as $milestone){
+		  echo <<<EOHTML
+			<tr>
+				<td><input type="checkbox" name="chk[]"/></td>
+				<td>
+					<select name="month[]">
+EOHTML;
+				foreach ($months as $month) {
+					echo "hello world";
+					echo $month;
+					if($month == $milestone->month){
+						echo <<<EOHTML
+						<option value="{$month}" selected>$month</option>
+EOHTML;
+					continue;
+					}
+					echo <<<EOHTML
+					<option value="{$month}">$month</option>
+EOHTML;
+				}
+				echo <<<EOHTML
+				</select>
+				<select name="day[]">
+EOHTML;
+				foreach (range(1, 31) as $day) {
+					if($month == $milestone->day){
+						echo <<<EOHTML
+						<option value="{$day}" selected>$day</option>
+EOHTML;
+					}
+					echo <<<EOHTML
+					<option value="{$day}">{$day}</option>
+EOHTML;
+				}
+				echo <<<EOHTML
+				</select>
+				<select name="year[]">
+EOHTML;
+				foreach (range(2013, 1990, -1) as $year) {
+					if($month == $milestone->year){
+						echo <<<EOHTML
+						<option value="{$year}" selected>$year</option>
+EOHTML;
+					}
+					echo <<<EOHTML
+					<option value="{$year}">{$year}</option>
+EOHTML;
+				}
+				echo <<<EOHTML
+					</select>
+				</td>
+				<td> <input type="text" name="txt[]"/>$milestone->description</td>
+			</tr>
+EOHTML;
+		} /* END FOR EACH LOOP ON MILESTONES */
+		
+	echo <<<EOHTML
+		</table>
 		<input type='submit' value='Save'/>
 		</form>
 EOHTML;
-	}
+	}/* END FUNCTION */
+
 
 	function upsmart_create_milestones_save() {
 		global $wpdb;
@@ -588,8 +559,8 @@ EOHTML;
 		foreach($data as $p) {
 			if($p == null) continue;
 			$result = $wpdb->query($wpdb->prepare("INSERT INTO upsmart_people
-							(wordpress_id,fname,lname,title,bio,photo,owner,percent_owner)
-							VALUES(%d,%s,%s,%s,%s,%s,%d,%d)",
+							(wordpress_id,fname,lname,title,bio,photo,owner,percent_owner,edu,skills,prof,awards,community,years,compensation)
+							VALUES(%d,%s,%s,%s,%s,%s,%d,%d,%s,%s,%s,%s,%s,%d,%s)",
 							array(
 								get_current_user_id(),
 								$p->fname,
@@ -599,6 +570,13 @@ EOHTML;
 								$p->photo,
 								$p->owner,
 								$p->ownership_percentage,
+								$p->edu,
+								$p->skills,
+								$p->prof,
+								$p->awards,
+								$p->community,
+								$p->years,
+								$p->compensation,
 							)
 			));
 			echo mysql_error();
@@ -692,6 +670,225 @@ EOHTML;
 		return true;
 	}
 	
+	function upsmart_create_companydescription_form(){
+		global $wpdb;
+		$data = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_description WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		
+		$media_url = admin_url("media-upload.php?type=image&amp;TB_iframe=true");
+		
+		$out = <<<EOHTML
+		<form method='post' enctype='multipart/form-data'>
+	<br/>
+	<table>
+	<tr><th><strong>How many years has the company been in business?</strong></th><td><input type='text' size='2' maxlength='2' name='yearsactive' value='{$data['yearsactive']}'/>years</td></tr>
+	</table>
+	<br/>
+	<table>
+		<tr><th colspan='2'></th>Market Summary</tr>
+		<tr><td colspan='2'>Describe the nature of your business and list the marketplace needs that you are trying to satisfy.</td>
+		<tr><td colspan='2'>
+EOHTML;
+	$out .= upsmart_get_editor($data['market_overview'],'marketoverview');
+	$out .= <<<EOHTML
+		</td></tr>
+		
+		<tr><th colspan='2'>Value Proposition</th></tr>
+		<tr><td colspan='2'>Explain how your products and services meet these needs.</td></tr>
+		<tr><td colspan='2'>
+EOHTML;
+	$out .= upsmart_get_editor($data['value_prop'],'valueprop');
+	$out .= <<<EOHTML
+		</td></tr>
+		
+		<tr><th colspan='2'>Target Market</th></tr>
+		<tr><td colspan='2'>List the specific consumers, organizations or businesses that your company serves or will serve.</td></tr>
+		<tr><td colspan='2'>
+EOHTML;
+	$out .= upsmart_get_editor($data['target_market'],'targetmarket');
+	$out .= <<<EOHTML
+		</td></tr>
+
+		<tr><th colspan='2'>Competitive Advantage</th></tr>
+		<tr><td colspan='2'>Explain the competitive advantages that you believe will make your business a success such as your location, expert team, opperational efficiancy, or ability to your customers.</td></tr>
+		<tr><td colspan='2'>
+EOHTML;
+	$out .= upsmart_get_editor($data['competitive_advantage'],'advantage');
+	$out .= <<<EOHTML
+		</td></tr>
+	</table>
+			
+		</table>
+	<br/>
+	<input type='submit' value='Save'/>
+	</form>
+EOHTML;
+		return $out;
+	}
+
+	function upsmart_create_companydescription_save() {
+		global $wpdb;
+		$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_description
+		                                      (wordpress_id,yearsactive,market_overview,value_prop,target_market,competitive_advantage)
+		                                      VALUES(%d,%d,%s,%s,%s,%s)",
+		                                      array(
+		                                          get_current_user_id(),
+		                                          $_POST['yearsactive'],
+		                                          $_POST['marketoverview'],
+		                                          $_POST['valueprop'],
+		                                          $_POST['targetmarket'],
+		                                          $_POST['advantage'],
+		                                      )
+		));
+		
+		if($result === false) return false;
+		return true;
+	}
+
+	function upsmart_create_financial_form() {
+		global $wpdb;
+		$data = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_disclaimer WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		
+			if($data['financial'] != 1){
+			return <<<EOHTML
+			<form method='post'>
+			<table>
+				<tr><th>By proceeding, you declare all information that you provide to be true, to the best of your knowledge, under the penalty of purjury.</th><td><input type=checkbox name='financial_disclaimer' value='1'/>Yes, I understand.</td></tr>
+				<tr><th colspan='2'><input type='submit' value='Save'/></th></tr>
+			</table>
+			</form>
+EOHTML;
+			}else{
+			$redirect=home_url('create/10');
+			return <<<EOHTML
+			<form method='post'>
+			<table>
+				<tr><th>By proceeding, you declare all information that you provide to be true, to the best of your knowledge, under the penalty of purjury.</th><td><input type=checkbox name='financial_disclaimer' value='1' checked="checked" disabled/>Yes, I understand.</td></tr>
+			</table>
+			</form>
+			<a href="http://www.upsmart.com/create/10"><input type='button' value='Next'/></a>
+EOHTML;
+			}
+	}
+
+	function upsmart_create_financial_save() {
+		global $wpdb;
+		$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_disclaimer
+		                                      (wordpress_id,financial)
+		                                      VALUES(%d,%d)",
+		                                      array(
+		                                          get_current_user_id(),
+		                                          $_POST['financial_disclaimer'],
+		                                      )
+		));
+		
+		if($result === false) return false;
+		return true;
+	}
+
+	function upsmart_create_financial_applicant_form(){
+		global $wpdb;
+		$assets = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_personal_financial_assets WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$liabilities = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_personal_financial_liabilities WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+
+			return <<<EOHTML
+		<script type="text/javascript">
+			window.onload = findTotalAssets();
+			function findTotalAssets(){
+			    var arr = document.getElementsByClassName('assets');
+			    var tot=0;
+			    for(var i=0;i<arr.length;i++){
+				if(parseInt(arr[i].value))
+				    tot += parseInt(arr[i].value);
+			    }
+			    document.getElementById('total_assets').value = tot;
+			}
+			window.onload = findTotalAssets;
+		</script>
+		<script type="text/javascript">
+			window.onload = findTotalLiabilities();
+			function findTotalLiabilities(){
+			    var arr = document.getElementsByClassName('liabilities');
+			    var tot=0;
+			    for(var i=0;i<arr.length;i++){
+				if(parseInt(arr[i].value))
+				    tot += parseInt(arr[i].value);
+			    }
+			    document.getElementById('total_liabilities').value = tot;
+			}
+		</script>
+			<body onload="findTotalAssets();findTotalLiabilities();">
+			<form method='post'>
+			<h5>Assets</h5>
+			<table>
+				<tr><th colspan= '2'>Cash - Total all checking accounts</th><td>$<input type=textbox id='checking" name='checking' class='assets' value='{$assets['checking']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '2'>Cash - Total all savings accounts</th><td>$<input type=textbox id='savings' name='savings' class='assets' value='{$assets['savings']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '2'>Certificates of deposit (total)</th><td>$<input type=textbox name='deposit_certificates' class='assets' value='{$assets['deposit_certificates']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '2'>Securities - stocks/bonds/mutual funds (total)</th><td>$<input type=textbox name='securities' class='assets' value='{$assets['securities']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '2'>Notes & contracts receivable (total)</th><td>$<input type=textbox name='notes_contracts' class='assets' value='{$assets['notes_contracts']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '2'>Life insurance (cash surrender value)</th><td>$<input type=textbox name='life_insurance' class='assets' value='{$assets['life_insurance']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '2'>Personal property total value (autos, jewelry, etc.)</th><td>$<input type=textbox name='personal_property' class='assets' value='{$assets['personal_property']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '2'>Retirement Funds (eg. IRAs, 401K)</th><td>$<input type=textbox name='retirement' class='assets' value='{$assets['retirement']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '2'>Real estate total (market value)</th><td>$<input type=textbox name='real_estate' class='assets' value='{$assets['real_estate']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th>Other Assets (total)</th><td>*Please list assets totaled<input type=textbox name='other_specify' value='{$assets['other_specify']}'/></td><td>$<input type=textbox class='assets' name='other_value'value='{$assets['other_value']}' onChange="findTotalAssets()"/></td></tr>
+				<tr class='total'><th colspan= '2'>Total</th><td>$<input type="text" name="total_assets" value='{$assets['total_assets']}' id="total_assets" disabled/></td></tr>
+			</table>
+			<br/><h5>Liabilities</h5>
+			<table>
+				<tr><th colspan= '2'>Accounts Payable (total)</th><td>$<input type=textbox name='accounts_payable' class='liabilities' value='{$liabilities['accounts_payable']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '2'>Short-term loans (total)</th><td>$<input type=textbox name='short_term_loans' class='liabilities' value='{$liabilities['short_term_loans']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '2'>Income taxes payable (total)</th><td>$<input type=textbox name='income_taxes' class='liabilities' value='{$liabilities['income_taxes']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '2'>Long-Term debt total (eg. student loans)</th><td>$<input type=textbox name='long_term_debt' class='liabilities' value='{$liabilities['long_term_debt']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '2'>Deferred income tax (total)</th><td>$<input type=textbox name='deferred_income_tax' class='liabilities' value='{$liabilities['deferred_income_tax']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th>Other Liabilities (total)</th><td>*Please list liabilities totaled<input type=textbox name='other_liabilities_specify' value='{$liabilities['other_liabilities_specify']}'/></td><td>$<input type=textbox name='other_liabilities_value' class='liabilities' value='{$liabilities['other_liabilities_value']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr class='total'><th colspan= '2'>Total</th><td>$<input type="text" name="total_liabilities" id="total_liabilities"/></td></tr>
+				<tr class='submit'><th colspan='1'><input type='submit' value='Save'/></th></tr>
+			</table>
+			</form>
+			</body>
+EOHTML;
+	}
+
+	function upsmart_create_financial_applicant_save() {
+		global $wpdb;
+		$result_assets = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_personal_financial_assets
+		                                      (wordpress_id,checking,savings,deposit_certificates,securities,notes_contracts,life_insurance,personal_property,retirement,real_estate,other_specify,other_value,total_assets)
+		                                      VALUES(%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%s,%d,%d)",
+		                                      array(
+		                                          get_current_user_id(),
+		                                          $_POST['checking'],
+		                                          $_POST['savings'],
+		                                          $_POST['deposit_certificates'],
+		                                          $_POST['securities'],
+		                                          $_POST['notes_contracts'],
+		                                          $_POST['life_insurance'],
+		                                          $_POST['personal_property'],
+		                                          $_POST['retirement'],
+		                                          $_POST['real_estate'],
+		                                          $_POST['other_specify'],
+		                                          $_POST['other_value'],
+		                                          $_POST['total_assets'],
+		                                      )
+		));
+		$result_liabilities = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_personal_financial_liabilities
+		                                      (wordpress_id,accounts_payable,short_term_loans,income_taxes,long_term_debt,deferred_income_tax,other_liabilities_specify,other_liabilities_value,total_liabilities)
+		                                      VALUES(%d,%d,%d,%d,%d,%d,%s,%d,%d)",
+		                                      array(
+		                                          get_current_user_id(),
+		                                          $_POST['accounts_payable'],
+		                                          $_POST['short_term_loans'],
+		                                          $_POST['income_taxes'],
+		                                          $_POST['long_term_debt'],
+		                                          $_POST['deferred_income_tax'],
+		                                          $_POST['other_liabilities_specify'],
+		                                          $_POST['other_liabilities_value'],
+		                                          $_POST['total_liabilities'],
+		                                      )
+		));
+		
+		if($result === false) return false;
+		return true;
+	}
+
 	function upsmart_create_get_template_set($company) {
 		switch_to_blog($company['business']['site_id']);
 		$theme = get_option('template');

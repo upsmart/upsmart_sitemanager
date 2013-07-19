@@ -32,13 +32,15 @@
 				<tr><th>Education</th><td><textarea name='pedu'/></textarea></td></tr> \
 				<tr><th>Relevant Skills</th><td><textarea name='pskills'/></textarea></td></tr> \
 				<tr><th>Professional Experience</th><td><textarea name='pprof'/></textarea></td></tr> \
-				<tr><th>Awards&Recognition</th><td><textarea name='pawards'/></textarea></td></tr> \
-				
+				<tr><th>Awards & Recognition</th><td><textarea name='pawards'/></textarea></td></tr> \
+				<tr><th>Community Involvement</th><td><textarea name='pcommunity'/></textarea></td></tr> \
+				<tr><th>Years with the Company</th><td><input type='text' size='2' maxlength='2' name='pyears'/>years</td></tr>\
+				<tr><th>Compensation Details</th><td><textarea name='pcompensation'/></textarea></td></tr> \
 				</table>\
 				<br/>\
 				<table>\
 				<tr><td id='ownershipquestion' colspan='2'>Does this person have an ownership stake?</td><td id='ownershipbox'><input type='checkbox' id='part_owner' name='owner' value='1'/>Yes</td></tr>\
-				<tr><td id='ownershipperquestion' colspan='2'>What percentage does this person hold?</td><td id='ownershipperanswer'><input type='text' size='2' maxlength='2' id='ownership_percentage' name='ownership_percentage'/>%</td></tr>\
+				<tr><td id='ownershipperquestion' colspan='2'>What percentage does this person hold?</td><td id='ownershipperanswer'><input type='text' size='3' maxlength='3' id='ownership_percentage' name='ownership_percentage'/>%</td></tr>\
 			</table>");
 			if(n < upsmart.people.people.length) {
 				p = upsmart.people.people[n];
@@ -49,6 +51,13 @@
 				item.find("input[name=photo]").attr("value",p.photo);
 				item.find("input[name=owner]").attr("value",p.owner);
 				item.find("input[name=ownership_percentage]").attr("value",p.ownership__percentage);
+				item.find("input[name=pedu").attr("value",p.edu);
+				item.find("input[name=pskills").attr("value",p.skills);
+				item.find("input[name=pprof").attr("value",p.prof);
+				item.find("input[name=pawards").attr("value",p.awards);
+				item.find("input[name=pcommunity").attr("value",p.community);
+				item.find("input[name=pyears").attr("value",p.years);
+				item.find("input[name=pcompensation").attr("value",p.compensation);
 			}
 			return item;
 		},
@@ -99,6 +108,13 @@
 				photo: $("#dialog input[name=photo]").attr("value"),
 				owner: $("#dialog input[name=owner]").attr("value"),
 				ownership_percentage: $("#dialog input[name=ownership_percentage]").attr("value"),
+				edu: $("#dialog input[name=pedu]").attr("value"),
+				skills: $("#dialog input[name=pskills]").attr("value"),
+				prof: $("#dialog input[name=pprof]").attr("value"),
+ 				awards: $("#dialog input[name=pawards]").attr("value"),
+ 				community: $("#dialog input[name=pcommunity]").attr("value"),
+ 				years: $("#dialog input[name=pyears]").attr("value"),
+ 				compensation: $("#dialog input[name=pcompensation]").attr("value"),
 			}
 			
 			$(this).dialog("close");
