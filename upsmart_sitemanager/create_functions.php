@@ -791,57 +791,40 @@ EOHTML;
 		$liabilities = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_personal_financial_liabilities WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 
 			return <<<EOHTML
-		<script type="text/javascript">
-			window.onload = findTotalAssets();
-			function findTotalAssets(){
-			    var arr = document.getElementsByClassName('assets');
-			    var tot=0;
-			    for(var i=0;i<arr.length;i++){
-				if(parseInt(arr[i].value))
-				    tot += parseInt(arr[i].value);
-			    }
-			    document.getElementById('total_assets').value = tot;
-			}
-			window.onload = findTotalAssets;
-		</script>
-		<script type="text/javascript">
-			window.onload = findTotalLiabilities();
-			function findTotalLiabilities(){
-			    var arr = document.getElementsByClassName('liabilities');
-			    var tot=0;
-			    for(var i=0;i<arr.length;i++){
-				if(parseInt(arr[i].value))
-				    tot += parseInt(arr[i].value);
-			    }
-			    document.getElementById('total_liabilities').value = tot;
-			}
-		</script>
-			<body onload="findTotalAssets();findTotalLiabilities();">
-			<form method='post'>
-			<h5>Assets</h5>
-			<table>
-				<tr><th colspan= '2'>Cash - Total all checking accounts</th><td>$<input type=textbox id='checking" name='checking' class='assets' value='{$assets['checking']}' onChange="findTotalAssets()"/></td></tr>
-				<tr><th colspan= '2'>Cash - Total all savings accounts</th><td>$<input type=textbox id='savings' name='savings' class='assets' value='{$assets['savings']}' onChange="findTotalAssets()"/></td></tr>
-				<tr><th colspan= '2'>Certificates of deposit (total)</th><td>$<input type=textbox name='deposit_certificates' class='assets' value='{$assets['deposit_certificates']}' onChange="findTotalAssets()"/></td></tr>
-				<tr><th colspan= '2'>Securities - stocks/bonds/mutual funds (total)</th><td>$<input type=textbox name='securities' class='assets' value='{$assets['securities']}' onChange="findTotalAssets()"/></td></tr>
-				<tr><th colspan= '2'>Notes & contracts receivable (total)</th><td>$<input type=textbox name='notes_contracts' class='assets' value='{$assets['notes_contracts']}' onChange="findTotalAssets()"/></td></tr>
-				<tr><th colspan= '2'>Life insurance (cash surrender value)</th><td>$<input type=textbox name='life_insurance' class='assets' value='{$assets['life_insurance']}' onChange="findTotalAssets()"/></td></tr>
-				<tr><th colspan= '2'>Personal property total value (autos, jewelry, etc.)</th><td>$<input type=textbox name='personal_property' class='assets' value='{$assets['personal_property']}' onChange="findTotalAssets()"/></td></tr>
-				<tr><th colspan= '2'>Retirement Funds (eg. IRAs, 401K)</th><td>$<input type=textbox name='retirement' class='assets' value='{$assets['retirement']}' onChange="findTotalAssets()"/></td></tr>
-				<tr><th colspan= '2'>Real estate total (market value)</th><td>$<input type=textbox name='real_estate' class='assets' value='{$assets['real_estate']}' onChange="findTotalAssets()"/></td></tr>
-				<tr><th>Other Assets (total)</th><td>*Please list assets totaled<input type=textbox name='other_specify' value='{$assets['other_specify']}'/></td><td>$<input type=textbox class='assets' name='other_value'value='{$assets['other_value']}' onChange="findTotalAssets()"/></td></tr>
-				<tr class='total'><th colspan= '2'>Total</th><td>$<input type="text" name="total_assets" value='{$assets['total_assets']}' id="total_assets" disabled/></td></tr>
-			</table>
-			<br/><h5>Liabilities</h5>
-			<table>
-				<tr><th colspan= '2'>Accounts Payable (total)</th><td>$<input type=textbox name='accounts_payable' class='liabilities' value='{$liabilities['accounts_payable']}' onChange="findTotalLiabilities()"/></td></tr>
-				<tr><th colspan= '2'>Short-term loans (total)</th><td>$<input type=textbox name='short_term_loans' class='liabilities' value='{$liabilities['short_term_loans']}' onChange="findTotalLiabilities()"/></td></tr>
-				<tr><th colspan= '2'>Income taxes payable (total)</th><td>$<input type=textbox name='income_taxes' class='liabilities' value='{$liabilities['income_taxes']}' onChange="findTotalLiabilities()"/></td></tr>
-				<tr><th colspan= '2'>Long-Term debt total (eg. student loans)</th><td>$<input type=textbox name='long_term_debt' class='liabilities' value='{$liabilities['long_term_debt']}' onChange="findTotalLiabilities()"/></td></tr>
-				<tr><th colspan= '2'>Deferred income tax (total)</th><td>$<input type=textbox name='deferred_income_tax' class='liabilities' value='{$liabilities['deferred_income_tax']}' onChange="findTotalLiabilities()"/></td></tr>
-				<tr><th>Other Liabilities (total)</th><td>*Please list liabilities totaled<input type=textbox name='other_liabilities_specify' value='{$liabilities['other_liabilities_specify']}'/></td><td>$<input type=textbox name='other_liabilities_value' class='liabilities' value='{$liabilities['other_liabilities_value']}' onChange="findTotalLiabilities()"/></td></tr>
-				<tr class='total'><th colspan= '2'>Total</th><td>$<input type="text" name="total_liabilities" id="total_liabilities"/></td></tr>
-				<tr class='submit'><th colspan='1'><input type='submit' value='Save'/></th></tr>
+		<script type="text/javascript" src="http://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_finance.js"></script>
+			<body onload="findTotalAssets();findTotalLiabilities();findGrandTotal();">
+			<form name='assetsandliabilitiesform' method='post'>
+			
+			<table class='assetsandliabilities'>
+				<tr><th class='tableheadder'><h3>Assets</h3></th>
+				<tr><th colspan= '1' class='lineitem'>Cash - Total all checking accounts</th><td colspan= '1' class='numbers'>$<input type=textbox id='checking' name='checking' class='assets' value='{$assets['checking']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Cash - Total all savings accounts</th><td colspan= '1' class='numbers'>$<input type=textbox id='savings' name='savings' class='assets' value='{$assets['savings']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Certificates of deposit (total)</th><td colspan= '1' class='numbers'>$<input 1242type=textbox name='deposit_certificates' class='assets' value='{$assets['deposit_certificates']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Securities - stocks/bonds/mutual funds (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='securities' class='assets' value='{$assets['securities']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Notes & contracts receivable (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='notes_contracts' class='assets' value='{$assets['notes_contracts']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Life insurance (cash surrender value)</th><td colspan= '1' class='numbers'>$<input type=textbox name='life_insurance' class='assets' value='{$assets['life_insurance']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Personal property total value (autos, jewelry, etc.)</th><td colspan= '1' class='numbers'>$<input type=textbox name='personal_property' class='assets' value='{$assets['personal_property']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Retirement Funds (eg. IRAs, 401K)</th><td colspan= '1' class='numbers'>$<input type=textbox name='retirement' class='assets' value='{$assets['retirement']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Real estate total (market value)</th><td colspan= '1' class='numbers'>$<input type=textbox name='real_estate' class='assets' value='{$assets['real_estate']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th class='othervalue lineitem'>Other Assets (total)</th><td class='othervalue numbers'>$<input type=textbox class='assets' name='other_value'value='{$assets['other_value']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th class='listother'>*Please list assets totaled</th><td class='listother numbers'><input type=textbox name='other_specify'class='listother' value='{$assets['other_specify']}'/></td></tr>
+				<tr><th colspan= '1' class='total'><h4>Assets Subtotal:</h4></th><td colspan= '1' class='numbers total'>$<input type="text" name="total_assets" value='{$assets['total_assets']}' id="total_assets" class:'subtotal' disabled onChange="findGrandTotal()"/></td></tr>
+			
+				<tr><th class='tableheadder liabilitiesheadder'><h3>Liabilities</h3></th></tr>
+			
+				<tr><th colspan= '1' class='lineitem'>Accounts Payable (total)</th><td class= 'numbers'>$<input type=textbox name='accounts_payable' class='liabilities' value='{$liabilities['accounts_payable']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Short-term loans (total)</th><td class= 'numbers'>$<input type=textbox name='short_term_loans' class='liabilities' value='{$liabilities['short_term_loans']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Income taxes payable (total)</th><td class= 'numbers'>$<input type=textbox name='income_taxes' class='liabilities' value='{$liabilities['income_taxes']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Long-Term debt total (eg. student loans)</th><td class= 'numbers'>$<input type=textbox name='long_term_debt' class='liabilities' value='{$liabilities['long_term_debt']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Deferred income tax (total)</th><td class= 'numbers'>$<input type=textbox name='deferred_income_tax' class='liabilities' value='{$liabilities['deferred_income_tax']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th class='othervalue lineitem'>Other Liabilities (total)</th><td class='othervalue numbers'>$<input type=textbox name='other_liabilities_value' class='liabilities' value='{$liabilities['other_liabilities_value']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th class='listother'>*Please list liabilities totaled</th><td class='listother numbers' ><input type=textbox name='other_liabilities_specify' class='listother' value='{$liabilities['other_liabilities_specify']}'/></td></tr>
+				<tr><th colspan= '1' class='total'><h4>Liabilities Subtotal:</h4></th><td class='total numbers'>$<input type="text" name="total_liabilities" id="total_liabilities" class:'subtotal' disabled onChange="findGrandTotal()"/></td></tr>
+				
+				<tr><th class='total'><h4>Grand Total</h4></th><td class='total numbers'>$<input type="text" name="grand_total" id='grand_total' disabled/></td></tr>
+				
+				<tr class='submit'><td colspan='2'><input type='submit' value='Save'/></td></tr>
+
 			</table>
 			</form>
 			</body>
@@ -888,7 +871,98 @@ EOHTML;
 		if($result === false) return false;
 		return true;
 	}
+	
+	function upsmart_create_financial_business_form(){
+		global $wpdb;
+		$assets = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business_financial_assets WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$liabilities = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business_financial_liabilities WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 
+			return <<<EOHTML
+		<script type="text/javascript" src="http://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_finance.js"></script>
+			<body onload="findTotalAssets();findTotalLiabilities();findGrandTotal();">
+			<form name= 'assetsandliabilitiesform' method='post'>
+			<table class='assetsandliabilities'>
+				<tr><th class='tableheadder'><h3>Assets</h3></th>
+				<tr><th colspan= '1' class='lineitem'>Cash - Total all checking accounts</th><td colspan= '1' class='numbers'>$<input type=textbox id='checking" name='checking' class='assets' value='{$assets['checking']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Cash - Total all savings accounts</th><td colspan= '1' class='numbers'>$<input type=textbox id='savings' name='savings' class='assets' value='{$assets['savings']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Inventory</th><td colspan= '1' class='numbers'>$<input type=textbox name='inventory' class='assets' value='{$assets['inventory']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Certificates of deposit (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='deposit_certificates' class='assets' value='{$assets['deposit_certificates']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Securities (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='securities' class='assets' value='{$assets['securities']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Notes & contracts receivable (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='notes_contracts' class='assets' value='{$assets['notes_contracts']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Property total value (autos, plant equipment etc.)</th><td colspan= '1' class='numbers'>$<input type=textbox name='personal_property' class='assets' value='{$assets['personal_property']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Real estate total (market value)</th><td colspan= '1' class='numbers'>$<input type=textbox name='real_estate' class='assets' value='{$assets['real_estate']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th class='lineitem'>Other Assets (total)</th><td colspan= '1' class='numbers'>$<input type=textbox class='assets' name='other_value'value='{$assets['other_value']}' onChange="findTotalAssets()"/></td></tr>
+				<tr><th class ='listother'>*Please list assets totaled</th><td class='numbers'><input type=textbox name='other_specify' value='{$assets['other_specify']}'/></td></tr>
+				<tr'><th colspan= '1' class='total'><h4>Assets Subtotal:</h4></th><td colspan= '1' class='numbers total'>$<input type="text" name="total_assets" value='{$assets['total_assets']}' id="total_assets" disabled onChange="findGrandTotal"/></td></tr>
+
+				<tr><th class= 'tableheadder liabilitiesheadder'><h3>Liabilities</h3></th></tr>
+
+				<tr><th colspan= '1' class='lineitem'>Accounts Payable (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='accounts_payable' class='liabilities' value='{$liabilities['accounts_payable']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Short-term loans (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='short_term_loans' class='liabilities' value='{$liabilities['short_term_loans']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Income taxes payable (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='income_taxes' class='liabilities' value='{$liabilities['income_taxes']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Accrued salaries and wages (ie. pay earned by employees but not yet received)</th><td colspan= '1' class='numbers'>$<input type=textbox name='accrued_salaries' class='liabilities' value='{$liabilities['accrued_salaries']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Unearned revenue (ie. total of all payments made in advance for work that has not yet been delivered)</th><td colspan= '1' class='numbers'>$<input type=textbox name='unearned_revenue' class='liabilities' value='{$liabilities['unearned_revenue']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Long-Term debt total</th><td colspan= '1' class='numbers'>$<input type=textbox name='long_term_debt' class='liabilities' value='{$liabilities['long_term_debt']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Deferred income tax (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='deferred_income_tax' class='liabilities' value='{$liabilities['deferred_income_tax']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Owner's Investment (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='owners_investment' class='liabilities' value='{$liabilities['owners_investment']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th colspan= '1' class='lineitem'>Retained Earnings (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='retained_earnings' class='retained_earnings' value='{$liabilities['retained_earnings']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th class='lineitem'>Other Liabilities (total)</th><td colspan= '1' class='numbers'>$<input type=textbox name='other_liabilities_value' class='liabilities' value='{$liabilities['other_liabilities_value']}' onChange="findTotalLiabilities()"/></td></tr>
+				<tr><th class='listother'>*Please list liabilities totaled</th><td class= 'numbers listother'><input type=textbox name='other_liabilities_specify' value='{$liabilities['other_liabilities_specify']}'/></td></tr>
+				<tr><th colspan= '1' class= 'total'><h4>Liabilities Subtotal:</h4></th><td colspan= '1' class='numbers total'>$<input type="text" name="total_liabilities" id="total_liabilities" disabled/ onChange="findGrandTotal()"></td></tr>
+
+				<tr><th class='total'><h4>Grand Total</h4></th><td class='total numbers'>$<input type="text" name="grand_total" id='grand_total' disabled/></td></tr>
+				
+				<tr class='submit'><td colspan='1'><input type='submit' value='Save'/></td></tr>
+			</table>
+			</form>
+			</body>
+EOHTML;
+	}
+
+	function upsmart_create_financial_business_save() {
+		global $wpdb;
+		$result_assets = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_business_financial_assets
+		                                      (wordpress_id,checking,savings,inventory,deposit_certificates,securities,notes_contracts,personal_property,real_estate,other_specify,other_value,total_assets)
+		                                      VALUES(%d,%d,%d,%d,%d,%d,%d,%d,%d,%s,%d,%d)",
+		                                      array(
+		                                          get_current_user_id(),
+		                                          $_POST['checking'],
+		                                          $_POST['savings'],
+		                                          $_POST['inventory'],
+		                                          $_POST['deposit_certificates'],
+		                                          $_POST['securities'],
+		                                          $_POST['notes_contracts'],
+		                                          $_POST['personal_property'],
+		                                          $_POST['real_estate'],
+		                                          $_POST['other_specify'],
+		                                          $_POST['other_value'],
+		                                          $_POST['total_assets'],
+		                                      )
+		));
+		$result_liabilities = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_business_financial_liabilities
+		                                      (wordpress_id,accounts_payable,short_term_loans,income_taxes,accrued_salaries,unearned_revenue,long_term_debt,deferred_income_tax,owners_investment,retained_earnings,other_liabilities_specify,other_liabilities_value,total_liabilities)
+		                                      VALUES(%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%s,%d,%d)",
+		                                      array(
+		                                          get_current_user_id(),
+		                                          $_POST['accounts_payable'],
+		                                          $_POST['short_term_loans'],
+		                                          $_POST['income_taxes'],
+		                                          $_POST['accrued_salaries'],
+		                                          $_POST['unearned_revenue'],
+		                                          $_POST['long_term_debt'],
+		                                          $_POST['deferred_income_tax'],
+		                                          $_POST['owners_investment'],
+		                                          $_POST['retained_earnings'],
+		                                          $_POST['other_liabilities_specify'],
+		                                          $_POST['other_liabilities_value'],
+		                                          $_POST['total_liabilities'],
+		                                      )
+		));
+		
+		if($result === false) return false;
+		return true;
+	}
+	
 	function upsmart_create_get_template_set($company) {
 		switch_to_blog($company['business']['site_id']);
 		$theme = get_option('template');

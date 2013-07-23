@@ -290,6 +290,29 @@ EOHTML;
 		$post->post_content .= upsmart_create_financial_applicant_form();
 		return $post;
 	}
+	
+	function upsmart_page_create_financial_business($post) {
+		global $wpdb;
+		
+		upsmart_require_login();
+		
+		$post->post_content = upsmart_page_create_nav(4,2).'<h2>Personal Financial Statement</h2>';
+		
+		if(!empty($_POST)) {
+			$result = upsmart_create_financial_business_save();
+			if($result === false) wp_die("An error has occurred.");
+			wp_redirect(home_url('create/11'));
+ 			exit();
+		}
+		
+		
+		$post->post_content .= <<<EOHTML
+		We'd like to know more about you and your company. Just fill out the fields below (everything is required).
+		<h3>About the Company</h3>
+EOHTML;
+		$post->post_content .= upsmart_create_financial_business_form();
+		return $post;
+	}
 
 	function upsmart_page_create_companydescription($post) {
 		global $wpdb;
