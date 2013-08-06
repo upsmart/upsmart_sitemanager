@@ -11,8 +11,8 @@
 		    tot += parseInt(arr[i].value);
 	    }
 	    document.getElementById('total_assets').value = tot;
+	    findGrandTotal();
 	}
-	window.onload = findTotalAssets;
 
 	window.onload = findTotalLiabilities();
 	function findTotalLiabilities(){
@@ -23,6 +23,7 @@
 		    tot += parseInt(arr[i].value);
 	    }
 	    document.getElementById('total_liabilities').value = tot;
+	    findGrandTotal();
 	}
 
 	window.onload = findGrandTotal();
@@ -30,6 +31,6 @@
 	    var ass = document.assetsandliabilitiesform.total_assets.value;
 	    var liab = document.assetsandliabilitiesform.total_liabilities.value;
 	    var tota=0;
-	    tota = +ass + +liab;
+	    tota = +ass - +liab;
 	    document.getElementById('grand_total').value = tota;
 	}

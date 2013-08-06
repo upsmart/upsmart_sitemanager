@@ -8,15 +8,27 @@ h4 {
 }
 th {
     font-weight: bold;
+    vertical-align: middle !important;
+}
+td {
+  vertical-align: middle;
 }
 table {
-    width: 80%;
+    width: auto;
+    margin-right: auto !important;
+    margin-left: auto !important;
 }
 input[type="submit"] {
     margin: 0.5em auto;
 }
+
+input[type="button"], input[type="submit"]{
+	cursor: pointer;
+	cursor: hand;
+}
+
 input, textarea {
-    vertical-align: top;
+    vertical-align: middle;
     border: 1px solid #999999;
 }
 textarea {
@@ -26,9 +38,56 @@ ul {
     list-style: disc outside none;
     padding-left: 1em;
 }
+
+/*.subheading {
+    white-space: nowrap;
+}*/
+
+span.subheading {
+  padding: 14% 3%;
+/*  line-height: 0;*/
+}
+
+.subheading > h3 {
+	padding: 15px;
+}
+
+.subheading > h2 {
+    padding: 20px;
+}
+
+
+#wrapper {
+    padding: 45px 0px;
+}
+
+#primary {
+    margin: auto;
+    text-align: center;
+    width: 100% !important;
+}
+#content {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 1em;
+	width: -moz-fit-content;
+	width: -webkit-fit-content;
+	width: fit-content;
+	background:#fff;
+	max-width: 1000px;
+	min-width: 650px;
+}
 #dialog {
     display: none;
 }
+
+.contact th:not(#contact_heading) {
+    text-align: right;
+    padding-right: 5px;
+    font-size: 12pt;
+    font-weight: bold;
+}
+
 #products {
     background: #EEEEEE;
     padding: 1em;
@@ -41,6 +100,7 @@ ul {
     position: relative;
     vertical-align: middle;
     width: 150px;
+    line-height: 80%;
 }
 #products > div > img {
     max-height: 150px;
@@ -64,6 +124,9 @@ ul {
     line-height: 150px;
     text-align: center;
 }
+div.subheading {
+    padding: 0 3% 4%;
+}
 .theme {
     float: left;
     height: 153px;
@@ -76,6 +139,40 @@ ul {
 .theme > img {
     height: 113px;
     width: 150px;
+}
+
+#content {
+    padding: 1em 0 !important;
+}
+
+.steps {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px !important;
+}
+
+div.steps {
+    background: none repeat scroll 0 0 #333333;
+    width: 100%;
+}
+
+div.steps ol.supersteps {
+    padding: 10px;
+}
+
+div.steps ol.substeps {
+    padding-bottom: 10px;
+}
+
+.entry-content > div #loginform {
+    font-size: 12pt;
+    line-height: 36px;
+    margin-top: 10px;
+    background: #ddd;
+    margin-right: auto;
+    padding: 10px 14px;
+    width: -moz-min-content;
 }
 
 #feature-list {
@@ -100,16 +197,49 @@ ul {
 	vertical-align: top;
 }
 
+#twocol #loginform p.login-submit {
+    margin-top: 25px;
+}
+
 .assetsandliabilities{
 	background: #fff;
-	border-spacing: 10px;
-	color: #666;
 	max-width: 250px
 }
 
-.assetsandliabilities th.lineitem{
+.assetsandliabilities, .infoentry, .media_infoentry, .wp-editor{
+	border-spacing: 10px;
+	color: #666;
+}
+.wp-editor td{font-size: 12pt;}
+
+.media_infoentry {
+	width: 700px;
+}
+ 
+.media_infoentry li {
+    margin-left: 13px;
+}
+
+.infoentry{width: 100%;}
+.infoentry th{
+	font-size: 12pt;
+	font-weight: bold;
+	padding: 5px;
+}
+
+.quicktags-toolbar, .wp_themeSkin tr.mceFirst td.mceToolbar{
+  background: #ddd !important;
+}
+
+.tmce-active .switch-tmce, .html-active .switch-html {
+    background-color: #DDDDDD !important;
+    border-color: #DDDDDD !important;
+}
+.lineitem{padding-left: 20px}
+.assetsandliabilities th.lineitem, .infoentry th {
 	background: none repeat scroll 0 0 #E6E7E8;
 }
+
 
 .assetsandliabilities th {
 	white-space: nowrap;
@@ -128,12 +258,25 @@ ul {
     text-align: right;
 }
 
-.assetsandliabilities td.numbers {
+input[type="text"], input[type="password"] {
+    height: 30px;
+    margin-right: 5px;
+    color: #333333;
+    font-size: 12pt;
+    font-weight: bold;
+    
+}
+
+td.numbers{
+  font-size: 12pt;
+/*  font-weight: bold;*/
+}
+.assetsandliabilities td.numbers{
 	vertical-align: middle;
-	line-height: 100%;
+	line-height: 40px;
 	padding: 5px 5px 5px 5px;
 	white-space: nowrap;
-	border: 1px solid #333
+	border: 1px solid #666;
 }
 
 .tableheadder{
@@ -143,13 +286,16 @@ ul {
 .liabilitiesheadder{
 	padding-top: 20px;
 }
-
+.smaller {
+    font-size: 10pt;
+}
 th.total{text-align:right;}
 
-.assetsandliabilities input{
+.assetsandliabilities input, .textinput > input{
 	background: none;
 	color: black;
 	border: none;
+	font-size: 12pt;
 }
 
 
@@ -169,8 +315,182 @@ td.total{
 	font-size: 14pt;
 }
 
-.total > input {
-	width: 150px;
-	font-size: 14pt;
-	vertical-align: middle;
+.submit{
+	float:right;
+}
+
+.total > input {font-size: 14pt;}
+
+.wp-editor{
+	width:100%;
+}
+
+.wp-editor li {
+    margin-left: 15px;
+}
+
+.entry-content{
+	color: #666;
+}
+
+.entry-content > h2, .entry-content > h3{
+    margin: 20px;
+    color: #666;
+}
+
+
+.subtext, .inputindent {
+    padding-left: 26%;
+}
+
+.subtext {
+    font-size: 8pt;
+}
+
+.media_infoentry th, .wp-editor th h3{
+      padding-top: 30px;
+      vertical-align: baseline !important;  
+}
+
+.media_infoentry th {
+    width: 25%;
+    text-align: right;
+}
+
+.media_infoentry input[type="button"]{
+    background: none repeat scroll 0 0 #FF7700;
+    border: medium;
+    color: #FFFFFF;
+    margin-left: 70px;
+    padding: 5px 15px;
+    font-size: small;
+}
+
+.media_infoentry input[type=button]:hover,button:hover{
+	background: #FFAA33;
+}
+
+.wp-editor td .wp-core-ui.wp-editor-wrap.tmce-active {
+    margin-bottom: 40px;
+}
+#dataTable tr td input[type="button"]{
+/*    background-image: url("delete_row_x.svg");*/
+    background-size: cover;
+    height: 20px;
+    width: 20px;
+    border: none;
+}
+
+#dataTable tr td input[type="button"]:hover{
+    background-image: url("delete_row_x.svg");
+    background-size: cover;
+    height: 20px;
+    width: 20px;
+    border: none;
+}
+#dataTable tr td input[type="button"]{
+    background-image: url("delete_row_x_neg.svg");
+}
+.deleteRow > input{
+    background: none;
+}
+/*.deleteRow {
+    display: inline;
+    vertical-align: middle;
+}*/
+div.deleteRow {
+    margin-right: 5px;
+}
+
+.styled-select select {
+   background: transparent;
+   width: 300px;
+   padding: 5px;
+   font-size: 16px;
+   line-height: 1;
+   border: 0;
+   border-radius: 0;
+   height: 34px;
+   -webkit-appearance: none;
+   font-weight: bold;
+   color: #333;
+   }
+
+.styled-select {
+    background: url('dropdown_arrow_neg.svg') no-repeat scroll right center / 34px auto;
+    border: 1px solid;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: middle;
+    width: 100px;
+}
+.styled-select:hover {
+  background: url("dropdown_arrow.svg") no-repeat scroll right center / 34px auto;
+}
+
+#dataTable {
+    border-spacing: 10px;
+}
+#month{ width: 135px;}
+#year{ width:100px;}
+#day{ width: 80px;}
+#day > select{ margin-left:10px;}
+
+
+#addRow{margin-bottom: 5px;}
+#addRow > input {
+    background: url("plus_neg.svg") no-repeat scroll left center / 27px auto #666666;
+    border: medium none;
+    color: #FFFFFF;
+    font-size: 12pt;
+    font-weight: bold;
+    height: 30px;
+    padding: 0px 0px 0px 23px;
+    width: 117px;
+    float left;
+}
+#addRow > input:hover{
+  background: url("plus.svg") no-repeat scroll left center / 27px auto #fff;
+  color: #333;
+}
+div #milestones{
+	width: -moz-fit-content;
+	width: -webkit-fit-content;
+	width: fit-content;
+	margin-left:auto;
+	margin-right:auto;
+}
+.customfile {
+    background: none repeat scroll 0 0 #666666;
+    border-radius: 7px 7px 7px 7px;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 2px;
+    position: relative;
+    white-space: nowrap;
+}
+.customfile-button {
+    background: none repeat scroll 0 0 #FF7700;
+    border: medium none;
+    color: #FFFFFF;
+    font-size: small;
+    margin-left: 270px;
+    padding: 5px 15px;
+    /*float: right;*/
+}
+.customfile-feedback {
+    color: #FFFFFF;
+    font-size: 1.2em;
+    font-style: italic;
+    margin: 1px 1px 1px 5px;
+    padding: 0.3em 0.6em;
+}
+.customfile-input {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    cursor: pointer;
+    height: 100px;
+    opacity: 0;
+    position: absolute;
+    z-index: 999;
 }
