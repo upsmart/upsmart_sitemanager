@@ -24,7 +24,7 @@
 			<li".($n==2?" class='active'":"")."><a href='{$base}2'>2. Client Info</a></li>
 			<li".($n==3?" class='active'":"")."><a href='{$base}3'>3. Business Info</a></li>
 			<li".($n==4?" class='active'":"")."><a href='{$base}9'>4. Financial</a></li>
-			<li".($n==5?" class='active'":"")."><a href='{$base}12'>5. Document Upload</a></li>
+			<li".($n==5?" class='active'":"")."><a href='{$base}12'>5. Render</a></li>
 		</ol></div><br style='clear: both'/>";
 		
 		if($sn != null) {
@@ -43,12 +43,6 @@
 					<li".($sn==1?" class='active'":"")."><a href='{$base}9'>a. Financial Overview</a></li>
 					<li".($sn==2?" class='active'":"")."><a href='{$base}10'>b. Applicant</a></li>
 					<li".($sn==3?" class='active'":"")."><a href='{$base}11'>c. Company</a></li>
-				</ol></div><br style='clear: both'/>";
-			}
-			if($n==5) {
-				$out .= "<div class'steps'><ol class='steps substeps'>
-					<li".($sn==1?" class='active'":"")."><a href='{$base}12'>a. Financial Documents</a></li>
-					<li".($sn==2?" class='active'":"")."><a href='{$base}13'>b. Legal Documents</a></li>
 				</ol></div><br style='clear: both'/>";
 			}
 		}
@@ -71,8 +65,7 @@
 			case '/9': $post = upsmart_page_create_financial($post); break;
 			case '/10': $post = upsmart_page_create_financial_applicant($post); break;
 			case '/11'; $post = upsmart_page_create_financial_business($post); break;
-			case '/12'; $post = upsmart_page_create_financial_docupload($post); break;
-			case '/13'; $post = upsmart_page_create_legal_docupload($post); break;
+			case '/12'; $post = upsmart_page_create_render($post); break;
 			case '/98': $post = upsmart_page_create_done($post); break;
 			case '/1111': $post = upsmart_page_create_clean($post); break;
 			case '/2222': $post = upsmart_page_create_delete($post); break;
@@ -323,14 +316,19 @@ EOHTML;
 		return $post;
 	}
 	
-	function upsmart_page_create_financial_docupload($post) {
+	function upsmart_page_create_render($post) {
 		global $wpdb;
 		
 		upsmart_require_login();
 		
-		$post -> post_content = upsmart_page_create_nav(5,1)."<span class='subheading'><h2>Financial Document Upload</h2></span>";
-		
-		$post->post_content .= upsmart_create_financial_docupload_form();
+		$post -> post_content = upsmart_page_create_nav(5,1)."<span class='subheading'><h2>Render</h2></span>";
+		if(!empty($_POST)) {
+			$result = upsmart_create_render_save();
+			if($result === false) wp_die("An error has occured.");
+			wp_redirect(home_url('create/12'));
+			exit();
+		}
+		$post->post_content .= upsmart_create_render_form();
 		return $post;
 	}
 

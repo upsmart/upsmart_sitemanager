@@ -918,18 +918,36 @@ EOHTML;
 		if($result === false) return false;
 		return true;
 	}
-	
-	function upsmart_create_financial_docupload_form() {
-		global $wpdb;
-		$data = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_profile WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
-		$current_user=get_current_user_id();
-		$out =<<<EOHTML
-		test
-		hi
-EOHTML
-		return $out;
-	}
 
+	function upsmart_create_render_form() {
+		global $wpdb;
+		$data = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_disclaimer WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		
+			if($data['financial'] != 1){
+			return <<<EOHTML
+			<form method='post'>
+			<table>
+				<tr><th><h4>By proceeding, you declare all information that you provide to be true, to the best of your knowledge, under the penalty of purjury.</h4></th></tr><tr><td><input type=checkbox name='financial_disclaimer' value='1'/>Yes, I understand.</td></tr>
+			</table>
+			<input type='submit' value='Save'/>
+			</form>
+EOHTML;
+			}else{
+			$redirect=home_url('create/10');
+			if (isset($_POST['button'])){
+			wp_redirect(home_url('create/10'));
+			}
+			return <<<EOHTML
+			<form method='post'>
+			<div style="display:none"><input type=checkbox name='financial_disclaimer' value='1' checked="checked"/></div>
+			<table>
+				<tr><th><h4>By proceeding, you declare all information that you provide to be true, to the best of your knowledge, under the penalty of purjury.</h4></th></tr><tr><td><input type=checkbox name='fin_disclaimer' value='1' checked="checked" disabled/>Yes, I understand.</td></tr>
+			</table>
+			<button name="button">Next</button>
+			</form>
+EOHTML;
+			}
+	}
 	
 	function upsmart_create_get_template_set($company) {
 		switch_to_blog($company['business']['site_id']);
