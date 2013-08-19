@@ -1,0 +1,9 @@
+
+function($) {
+	upsmart = {
+		init() {
+		
+		}
+	}
+	
+}(jQuery);

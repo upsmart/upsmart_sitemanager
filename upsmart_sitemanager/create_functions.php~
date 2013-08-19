@@ -114,62 +114,59 @@ EOHTML;
 	function upsmart_create_profile_form() {
 		global $wpdb;
 		$data = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_profile WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$current_user=get_current_user_id();
 		
 		$media_url = admin_url("media-upload.php?type=image&amp;TB_iframe=true");
 		
+		echo $data['logo'];
+		$fields = array(logo, media_1, media_2);
+		foreach ($fields as $field) {
+		echo "<br/>".$field."<br/>";
+		${$field."extension"}=substr($data[$field], strpos($data[$field], ".")+1);
+		echo "<br/> Hey look at this!!!!".$media_1extension."<br/>";
+		if ($data[$field]!=null){
+			echo "datafield: ".$data[$field]."<br/>";
+			echo "#".$field."row .customfile-feedback:not(.customfile-feedback-populated){visibility: hidden;}";
+			echo("<style type='text/css'>#".$field."row .customfile-feedback:not(.customfile-feedback-populated){visibility: hidden;} #".$field."row th{padding-top:0px !important;}</style>");
+EOHTML;
+		echo "booga booga booga";
+		}else{ 
+			echo("<style type='text/css'>#existing".$field."{display:none;}</style>");
+			echo "<p>hi</p>";
+EOHTML;
+		}
+		}
 		$out = <<<EOHTML
 		<form method='post' enctype='multipart/form-data'>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 		<script type="text/javascript" src='https://dl.dropboxusercontent.com/u/11993667/jQuery-Custom-File-Input/js/jQuery.fileinput.js'></script>
 
 	<script type="text/javascript">
-		jQuery(document).ready(function() {
-			jQuery("#logo_upload").click(function() {
-				tb_show("", "{$media_url}");
-				window.send_to_editor = function(html) {
-					imgurl = jQuery("img",html).attr("src");
-					jQuery("#logo_field").val(imgurl);
-					tb_remove();
-				}
-				return false;
-			});
-		
-			jQuery("#media1_upload").click(function() {
-				tb_show("", "{$media_url}");
-				window.send_to_editor = function(html) {
-					imgurl = jQuery("img",html).attr("src");
-					jQuery("#media1_field").val(imgurl);
-					tb_remove();
-				}
-				return false;
-			});
-			
-			jQuery("#media2_upload").click(function() {
-				tb_show("", "{$media_url}");
-				window.send_to_editor = function(html) {
-					imgurl = jQuery("img",html).attr("src");
-					jQuery("#media2_field").val(imgurl);
-					tb_remove();
-				}
-				return false;
-			});
+		$(function(){
+			$('#logo').customFileInput();
+			$('#media_1').customFileInput();
+			$('#media_2').customFileInput();
 		});
 	</script>
 	<script type="text/javascript">
-		$('#file').customFileInput();
-	</script>
+            function alertFilename()
+            {
+                alert(logo.value);
+            }
+        </script>
 	<table class='media_infoentry'>
 		<tr><td><h3>Branding</h3></td></tr>
-		<tr><th><h4>Logo</h4></th><td><input type='text' id="logo_field" value="{$data['logo']}" name='logo'/>
-		<input type='button' id='logo_upload' value='Upload/Open Library'/></tr>
+		
+		<tr><td colspan='2' class= 'inputindent'><img id='existinglogo' class='imagepreview' src="https://upsmart.com/wp-content/uploads/upsmart/{$current_user}/logo.{$logoextension}" max-height='100px'></td></tr>
+		<tr id='logorow'><th><h4>Logo:</h4></th><td><div class='blocking'><span class="currentname">{$data['logo']}</span><input id='logo' class='upload' type='file' name='logo' onchange="hidePrevious('#existinglogo', '#logorow .currentname')"/></div></td></tr>
 		<tr><td colspan='2' class= 'subtext'>The bigger the better&mdash;don't worry, we'll scale this down for you. This image should have a transparent background and be suitable for display on a colored background.</td></tr>
-		<tr><th><h4>Media</h4></th><td colspan='2'><input id="file" type='file' name='file'/>
-		<input type='button' id='media1_upload' value='Upload/Open Library'/></td></tr>
+		
+		<tr><td colspan='2' class= 'inputindent'><img id='existingmedia_1' class='imagepreview' src="https://upsmart.com/wp-content/uploads/upsmart/{$current_user}/media_1.{$media_1extension}" max-height='100px'></td></tr>
+		<tr id='media_1row'><th><h4>Media:</h4></th><td colspan='2'><div class='blocking'><span class="currentname">{$data['media_1']}</span><input id='media_1' class='upload' type='file' name='media_1' onchange="hidePrevious('#existingmedia_1', '#media_1row .currentname')"/></div></td></tr>
 		<tr><td colspan='2' class= 'subtext'>Now upload the "coolest" piece of media you have. This will be used on the top fold of your generated site to draw users in.</td></tr>
-		<tr><td colspan='2' class= 'inputindent'>
-		<input type='text' id="media2_field" value="{$data['media2']}" name='media2'/>
-		<input type='button' id='media2_upload' value='Upload/Open Library'/>
-		</td></tr>
+		
+		<tr><td colspan='2' class= 'inputindent'><img id='existingmedia_2' class='imagepreview' src="https://upsmart.com/wp-content/uploads/upsmart/{$current_user}/media_2.{$media_2extension}" max-height='100px'></td></tr>
+		<tr id='media_2row'><td colspan='2' class= 'inputindent'><div class='blocking'><span class="currentname">{$data['media_2']}</span><input id='media_2' class='upload' type='file' name='media_2' onchange="hidePrevious('#existingmedia_2', '#media_2row .currentname')"/></div></td></tr>
 		<tr><td colspan='2' class= 'subtext'>While you're at it, give us the second coolest piece of media you have as well. Who knows when you might need it?</td></tr>
 		<tr>
 		<th><h4>Note on images:</h4></th>
@@ -185,7 +182,10 @@ EOHTML;
 		<tr><td colspan='2'>Your mission statement should include ...</td></tr>
 		<tr><td colspan='2'>
 EOHTML;
-	$out .= upsmart_get_editor($data['mission'],'mission');
+	$settings = array(
+	'textarea_rows' => 12,
+	);
+	$out .= upsmart_get_editor($data['mission'],'mission', $settings);
 	$out .= <<<EOHTML
 		</td></tr>
 		
@@ -193,7 +193,7 @@ EOHTML;
 		<tr><td colspan='2'>A good "About Us" writeup should answer the following questions: <li>Who are you? (Think back to the people biographies you just submitted)</li><li>What are you doing?</li><li>Why is what you're doing awesome?</li></td></tr>
 		<tr><td colspan='2'>
 EOHTML;
-	$out .= upsmart_get_editor($data['about'],'about');
+	$out .= upsmart_get_editor($data['about'],'about', $settings);
 	$out .= <<<EOHTML
 		</td></tr>
 		
@@ -201,7 +201,7 @@ EOHTML;
 		<tr><td colspan='2'>Let us know your background. Some things to think about: ...</td></tr>
 		<tr><td colspan='2'>
 EOHTML;
-	$out .= upsmart_get_editor($data['history'],'history');
+	$out .= upsmart_get_editor($data['history'],'history', $settings);
 	$out .= <<<EOHTML
 		</td></tr>
 	</table>
@@ -209,6 +209,12 @@ EOHTML;
 		</table>
 		<input type='submit' value='Save'/>
 		</form>	
+	<script type="text/javascript">
+            function hidePrevious(id_1, id_2){
+                $(id_1).css('display', 'none');
+                $(id_2).css('display', 'none');
+		}
+        </script>
 EOHTML;
 		return $out;
 	}
@@ -227,51 +233,59 @@ EOHTML;
 	
 	function upsmart_create_profile_save() {
 		global $wpdb;
+		$data = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_profile WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+// 		var_dump($data);
+// 		echo $data['logo'];
+// 		echo "<br/>Logo:  ".$_POST['logo'];
+// 		echo "<br/>Media-1: ".$_POST['media_1'];
+// 		echo "<br/>About:  ".$_POST['about'];
+// 		echo "<br/> Name: ".$_FILES['logo']['name'];
+// 		echo "<br/> Name: ".$_FILES['media_1']['name'];
+// 		echo "<br/> Name: ".$_FILES['media_2']['name'];
+// 		
+// 		echo $_POST['logo'];
+
+		$fields = array(logo, media_1, media_2);
+		$dir = WP_CONTENT_DIR.'/uploads/upsmart/'.get_current_user_id().'/';
+		
+		foreach ($fields as $field) {
+		${$field."extension"}=substr($data[$field], strpos($data[$field], ".")+1);
+		if ($_FILES[$field]['name']==null){
+// 			echo "<br/>Field is: ".$field." ".$data[$field];
+			$$field=$data[$field];
+// 			echo "<br/> Fields: ".$$field;
+		}else{
+			$$field=$_FILES[$field]['name'];
+			if($data[$field]!=null){
+			unlink($dir.$field.".".${$field."extension"});
+			echo "<br/>delete data field ".$dir.$field;
+		}}
+			echo "<br/>delete data field ".$dir.$field.".".${$field."extension"};
+		}
+		
 		$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_profile
-		                                      (wordpress_id,logo,media1,media2,mission,about,history)
+		                                      (wordpress_id,logo,media_1,media_2,mission,about,history)
 		                                      VALUES(%d,%s,%s,%s,%s,%s,%s)",
 		                                      array(
 		                                          get_current_user_id(),
-		                                          $_POST['logo'],
-		                                          $_POST['media1'],
-		                                          $_POST['media2'],
+		                                          $logo,
+		                                          $media_1,
+		                                          $media_2,
 		                                          $_POST['mission'],
 		                                          $_POST['about'],
 		                                          $_POST['history'],
 		                                      )
 		));
 		
+		//Save the provided images.
+		$dir = WP_CONTENT_DIR.'/uploads/upsmart/'.get_current_user_id().'/';
+		@mkdir($dir,0777,true);
+		move_uploaded_file($_FILES['logo']['tmp_name'],$dir.'logo'.substr($_FILES['logo']['name'],-4,4));
+		move_uploaded_file($_FILES['media_1']['tmp_name'],$dir.'media_1'.substr($_FILES['media_1']['name'],-4,4));
+		move_uploaded_file($_FILES['media_2']['tmp_name'],$dir.'media_2'.substr($_FILES['media_2']['name'],-4,4));
+	      
 		if($result === false) return false;
 		return true;
-
-		$chkbox = $_POST['chk'];
-		$mimonth = $_POST['month'];
-		$miday = $_POST['day'];
-		$miyear = $_POST['year'];
-		$txtbox = $_POST['txt'];
- 
-		foreach($txtbox as $a => $b) {
-			if($b == null) continue;
-			$result = $wpdb -> query ($wpdb->prepare("INSERT INTO upsmart_milestones
-									(wordpress_id, month, day, year, description)
-									VALUES(%d,%d,%d,%d,%s)",
-									array(
-										get_current_user_id(),
-										$b->month,
-										$b->day,
-										$b->year,
-										$b->description
-									)
-			));
-
-			if($result === false) return false;
-			}
-			return true;
-		$value = $_POST['input1'];
-
-		$sql = "INSERT INTO upsmart_test (Input) VALUES ('$value')";
-
-
 	}
 
 	function upsmart_create_milestones_form() {
@@ -904,6 +918,18 @@ EOHTML;
 		if($result === false) return false;
 		return true;
 	}
+	
+	function upsmart_create_financial_docupload_form() {
+		global $wpdb;
+		$data = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_profile WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$current_user=get_current_user_id();
+		$out =<<<EOHTML
+		test
+		hi
+EOHTML
+		return $out;
+	}
+
 	
 	function upsmart_create_get_template_set($company) {
 		switch_to_blog($company['business']['site_id']);

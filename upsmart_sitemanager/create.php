@@ -190,7 +190,7 @@ EOHTML;
 		if(!empty($_POST)) {
 			$result = upsmart_create_profile_save();
 			if($result === false) wp_die("An error has occurred.");
-			wp_redirect(home_url('create/6'));
+// 			wp_redirect(home_url('create/5'));
  			exit();
 		}
 		
@@ -330,14 +330,7 @@ EOHTML;
 		
 		$post -> post_content = upsmart_page_create_nav(5,1)."<span class='subheading'><h2>Financial Document Upload</h2></span>";
 		
-		if(!empty($_POST)) {
-			$result = upsmart_page_create_financial_docupload_save();
-			if($result === false) wp_die("An error has occurred.");
-			wp_redirect(home_url('create/4'));
-			exit();
-		}
-		$post->post_content .= "<span class= 'subheading'>We now need a few financial documents to validate some of your answers.  Please upload the document in PDF format.</span>";
-		$post->post_content .= upsmart_page_create_financial_docupload_form();
+		$post->post_content .= upsmart_create_financial_docupload_form();
 		return $post;
 	}
 

@@ -462,28 +462,53 @@ div #milestones{
 }
 .customfile {
     background: none repeat scroll 0 0 #666666;
-    border-radius: 7px 7px 7px 7px;
+    border-radius: 0px 7px 7px 0px;
     cursor: pointer;
     overflow: hidden;
-    padding: 2px;
     position: relative;
     white-space: nowrap;
+    width: 400px;
+    overflow: hidden;
+    height:30px;
 }
+/*.upload{
+  font-size: 400pt;
+  background: rgba(0, 0, 221, .2);
+  position: absolute;
+  right:0;
+  top: 0;
+  border: none;
+}*/
 .customfile-button {
     background: none repeat scroll 0 0 #FF7700;
     border: medium none;
     color: #FFFFFF;
     font-size: small;
-    margin-left: 270px;
+    margin-left: 70px;
     padding: 5px 15px;
-    /*float: right;*/
+    float: right;
+    height: 21px;
 }
-.customfile-feedback {
+.upload.customfile-input {
+    width: 100%;
+}
+.currentname{
+    position: absolute;
+    z-index:888;
+    color: #FFFFFF;
+    font-size: 1.2em;
+    font-style: bold;
+    margin: 1px 1px 1px 5px;
+    padding: 0.3em 0.6em;
+    display: inline-block;
+}
+.customfile-feedback{
     color: #FFFFFF;
     font-size: 1.2em;
     font-style: italic;
     margin: 1px 1px 1px 5px;
     padding: 0.3em 0.6em;
+    display: inline-block;
 }
 .customfile-input {
     background: none repeat scroll 0 0 transparent;
@@ -493,4 +518,13 @@ div #milestones{
     opacity: 0;
     position: absolute;
     z-index: 999;
+}
+.blocking {
+      width:100px;
+      height:35px;
+      overflow: hidden;
+      width:400px;
+}
+.imagepreview{
+      max-height: 100px;
 }
