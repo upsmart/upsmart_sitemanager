@@ -20,7 +20,7 @@
 		},
  
 		createForm: function(n) {
-			item = $("<table	> \
+			item = $("<table> \
 				<tr><th>Name</th><td class='twoinput'><input name='pfname' placeholder='Jane'/><input name='plname' placeholder='Smith'/></tr> \
 				<tr><th>Title</th><td><input name='ptitle' placeholder='Chief Executive Officer'/></tr> \
 				<tr><th>Short Bio</th><td><textarea name='pbio'/></textarea></td></tr> \
@@ -34,13 +34,13 @@
 				<tr><th>Professional Experience</th><td><textarea name='pprof'/></textarea></td></tr> \
 				<tr><th>Awards & Recognition</th><td><textarea name='pawards'/></textarea></td></tr> \
 				<tr><th>Community Involvement</th><td><textarea name='pcommunity'/></textarea></td></tr> \
-				<tr><th>Years with the Company</th><td><input type='text' size='2' maxlength='2' name='pyears'/>years</td></tr>\
+				<tr><th>Years with the Company</th><td><input size='2' maxlength='2' name='pyears'/>years</td></tr>\
 				<tr><th>Compensation Details</th><td><textarea name='pcompensation'/></textarea></td></tr> \
 				</table>\
 				<br/>\
 				<table>\
 				<tr><td id='ownershipquestion' colspan='2'>Does this person have an ownership stake?</td><td id='ownershipbox'><input type='checkbox' id='part_owner' name='owner' value='1'/>Yes</td></tr>\
-				<tr><td id='ownershipperquestion' colspan='2'>What percentage does this person hold?</td><td id='ownershipperanswer'><input type='text' size='3' maxlength='3' id='ownership_percentage' name='ownership_percentage'/>%</td></tr>\
+				<tr><td id='ownershipperquestion' colspan='2'>What percentage does this person hold?</td><td id='ownershipperanswer'><input type='text' size='3' maxlength='3' id='ownership_percentage' name='ppercent'/>%</td></tr>\
 			</table>");
 			if(n < upsmart.people.people.length) {
 				p = upsmart.people.people[n];
@@ -49,15 +49,15 @@
 				item.find("input[name=ptitle]").attr("value",p.title);
 				item.find("textarea[name=pbio]").attr("value",p.bio);
 				item.find("input[name=photo]").attr("value",p.photo);
-				item.find("input[name=owner]").attr("value",p.owner);
-				item.find("input[name=ownership_percentage]").attr("value",p.ownership__percentage);
-				item.find("input[name=pedu").attr("value",p.edu);
-				item.find("input[name=pskills").attr("value",p.skills);
-				item.find("input[name=pprof").attr("value",p.prof);
-				item.find("input[name=pawards").attr("value",p.awards);
-				item.find("input[name=pcommunity").attr("value",p.community);
-				item.find("input[name=pyears").attr("value",p.years);
-				item.find("input[name=pcompensation").attr("value",p.compensation);
+				if(p.owner == 1) {item.find("input[name=owner]").attr("checked",true);} else {item.find("input[name=owner]").attr("checked",false);}
+				item.find("input[name=ppercent]").attr("value",p.percent);
+				item.find("textarea[name=pedu]").attr("value",p.edu);
+				item.find("textarea[name=pskills]").attr("value",p.skills);
+				item.find("textarea[name=pprof]").attr("value",p.prof);
+				item.find("textarea[name=pawards]").attr("value",p.awards);
+				item.find("textarea[name=pcommunity]").attr("value",p.community);
+				item.find("input[name=pyears]").attr("value",p.years);
+				item.find("textarea[name=pcompensation]").attr("value",p.compensation);
 			}
 			return item;
 		},
@@ -106,15 +106,14 @@
 				title: $("#dialog input[name=ptitle]").attr("value"),
 				bio:   $("#dialog textarea[name=pbio]").attr("value"),
 				photo: $("#dialog input[name=photo]").attr("value"),
-				owner: $("#dialog input[name=owner]").attr("value"),
-				ownership_percentage: $("#dialog input[name=ownership_percentage]").attr("value"),
-				edu: $("#dialog input[name=pedu]").attr("value"),
-				skills: $("#dialog input[name=pskills]").attr("value"),
-				prof: $("#dialog input[name=pprof]").attr("value"),
- 				awards: $("#dialog input[name=pawards]").attr("value"),
- 				community: $("#dialog input[name=pcommunity]").attr("value"),
+				percent: $("#dialog input[name=ppercent]").attr("value"),
+				edu: $("#dialog textarea[name=pedu]").attr("value"),
+				skills: $("#dialog textarea[name=pskills]").attr("value"),
+				prof: $("#dialog textarea[name=pprof]").attr("value"),
+ 				awards: $("#dialog textarea[name=pawards]").attr("value"),
+ 				community: $("#dialog textarea[name=pcommunity]").attr("value"),
  				years: $("#dialog input[name=pyears]").attr("value"),
- 				compensation: $("#dialog input[name=pcompensation]").attr("value"),
+ 				compensation: $("#dialog textarea[name=pcompensation]").attr("value"),
 			}
 			
 			$(this).dialog("close");
@@ -133,7 +132,14 @@
 			}
 			
 			box.append($("<img/>").attr("src",person.photo));
+			box.append($("<button/>").attr("class","remove-user-btn"));
 			box.append($("<div/>").attr("class","label").html(person.fname+" "+person.lname));
+			$('.remove-user-btn').bind('click', function(e) {
+			    removePerson($(this).attr(person.id));
+
+			    //Remove the containing div here as well, something like
+			    $(this).parent().remove()
+			});
 		}
 	}
 	

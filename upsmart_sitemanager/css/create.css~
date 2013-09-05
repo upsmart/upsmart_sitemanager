@@ -1,4 +1,4 @@
-@import "http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css";
+@import "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css";
 h2, h3, h4, h5 {
     margin: 0.5em 0;
 }
@@ -42,7 +42,9 @@ ul {
 /*.subheading {
     white-space: nowrap;
 }*/
-
+.subheading-top {
+  padding-top: 3%;
+}
 span.subheading {
   padding: 14% 3%;
 /*  line-height: 0;*/
@@ -69,13 +71,13 @@ span.subheading {
 #content {
 	margin-left: auto;
 	margin-right: auto;
-	padding: 1em;
+/* 	padding: 1em; */
 	width: -moz-fit-content;
 	width: -webkit-fit-content;
 	width: fit-content;
 	background:#fff;
 	max-width: 1000px;
-	min-width: 650px;
+	min-width: 700px;
 }
 #dialog {
     display: none;
@@ -125,7 +127,9 @@ span.subheading {
     text-align: center;
 }
 div.subheading {
-    padding: 0 3% 4%;
+  padding-bottom: 3%;  
+  padding-left: 4%;
+  padding-right: 4%;
 }
 .theme {
     float: left;
@@ -141,15 +145,16 @@ div.subheading {
     width: 150px;
 }
 
-#content {
+/*#content {
     padding: 1em 0 !important;
-}
+}*/
 
 .steps {
     display: inline-block;
     margin-left: auto;
     margin-right: auto;
     margin-top: 0px !important;
+/*    padding: 0 5px;*/
 }
 
 div.steps {
@@ -210,6 +215,7 @@ div.steps ol.substeps {
 	border-spacing: 10px;
 	color: #666;
 }
+#legal_structure {width:190px;}
 .wp-editor td{font-size: 12pt;}
 
 .media_infoentry {
@@ -300,7 +306,7 @@ th.total{text-align:right;}
 
 
 .assetsandliabilities td.total, td.total input {
-    color: #55bbff;
+    color: #fff;
     font-weight: bold;
     display: table-cell;
     vertical-align: middle;
@@ -311,8 +317,9 @@ th.total{text-align:right;}
 }*/
 
 td.total{
-	background:#000;
+	background:#FF7700;
 	font-size: 14pt;
+	border: none !important;
 }
 
 .submit{
@@ -357,6 +364,10 @@ td.total{
     text-align: right;
 }
 
+table.services, #services table.services input[type="text"]{
+  width: 100%;
+}
+
 .media_infoentry input[type="button"]{
     background: none repeat scroll 0 0 #FF7700;
     border: medium;
@@ -373,23 +384,31 @@ td.total{
 .wp-editor td .wp-core-ui.wp-editor-wrap.tmce-active {
     margin-bottom: 40px;
 }
-#dataTable tr td input[type="button"]{
-/*    background-image: url("delete_row_x.svg");*/
+#dataTable tr td input[type="button"], #goals tr td input[type="button"], #services tr td input[type="button"]{
+    background-image: url("delete_row_x_neg.svg");
     background-size: cover;
     height: 20px;
     width: 20px;
     border: none;
 }
 
-#dataTable tr td input[type="button"]:hover{
+#goals > div#goals {
+    padding-top: 30px;
+}
+.goalhead {
+    margin-top: 15px;
+    font-size: medium;
+    }
+/* .goalhead h4 {margin-right: 10px;} */
+#dataTable tr td input[type="button"]:hover, #goals tr td input[type="button"]:hover, #services tr td input[type="button"]:hover{
     background-image: url("delete_row_x.svg");
     background-size: cover;
     height: 20px;
     width: 20px;
     border: none;
 }
-#dataTable tr td input[type="button"]{
-    background-image: url("delete_row_x_neg.svg");
+#goals table, #goals input[type="text"]{
+  width: 100%;
 }
 .deleteRow > input{
     background: none;
@@ -398,10 +417,19 @@ td.total{
     display: inline;
     vertical-align: middle;
 }*/
-div.deleteRow {
+.deleteRow {
     margin-right: 5px;
+    width: 15px;
 }
-
+div#goals div h4{
+    float: left;
+    margin-left: 40px;
+    line-height: 30px;
+}
+/*div#goals div div#addRow input{
+  float: right;
+  margin-right: 50px;
+}*/
 .styled-select select {
    background: transparent;
    width: 300px;
@@ -427,31 +455,36 @@ div.deleteRow {
 .styled-select:hover {
   background: url("dropdown_arrow.svg") no-repeat scroll right center / 34px auto;
 }
-
-#dataTable {
+#dataTable, .milestones {
     border-spacing: 10px;
 }
 #month{ width: 135px;}
 #year{ width:100px;}
 #day{ width: 80px;}
 #day > select{ margin-left:10px;}
-
-
-#addRow{margin-bottom: 5px;}
-#addRow > input {
-    background: url("plus_neg.svg") no-repeat scroll left center / 27px auto #666666;
+div#goals div.addRow{
+  float:right;
+  margin-right: 10px;
+}
+div#goals table{clear:both;}
+#addRow .addRow{
+  margin-bottom: 5px;
+  width: auto;
+}
+#addRow > input, .addRow > input{
+    background: url("plus_neg.svg") no-repeat scroll left center / 27px auto #FF7700;
     border: medium none;
     color: #FFFFFF;
     font-size: 12pt;
     font-weight: bold;
     height: 30px;
     padding: 0px 0px 0px 23px;
-    width: 117px;
+    width: 160px;
     float left;
 }
-#addRow > input:hover{
+#addRow > input:hover, .addRow > input:hover{
   background: url("plus.svg") no-repeat scroll left center / 27px auto #fff;
-  color: #333;
+  color: #FF7700;
 }
 div #milestones{
 	width: -moz-fit-content;
@@ -497,7 +530,7 @@ div #milestones{
     z-index:888;
     color: #FFFFFF;
     font-size: 1.2em;
-    font-style: bold;
+    font-weight: bold;
     margin: 1px 1px 1px 5px;
     padding: 0.3em 0.6em;
     display: inline-block;
@@ -528,3 +561,23 @@ div #milestones{
 .imagepreview{
       max-height: 100px;
 }
+
+.ui-widget-overlay.ui-front{
+ position: fixed !important;
+  z-index: 222;
+}
+.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-front.ui-dialog-buttons.ui-draggable.ui-resizable {z-index: 1000; top: 40px;}
+/*footer {
+    background: none repeat scroll 0 0 #333333;
+    border-top: 5px solid #FF7700;
+    bottom: 0;
+    clear: both;
+    color: #FFFFFF;
+    font-size: 0.9em;
+    font-weight: bold;
+    height: 50px;
+    padding-top: 10px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}*/

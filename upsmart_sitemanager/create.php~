@@ -23,8 +23,9 @@
 			<li".($n==1?" class='active'":"").">1. Sign In</li>
 			<li".($n==2?" class='active'":"")."><a href='{$base}2'>2. Client Info</a></li>
 			<li".($n==3?" class='active'":"")."><a href='{$base}3'>3. Business Info</a></li>
-			<li".($n==4?" class='active'":"")."><a href='{$base}9'>4. Financial</a></li>
-			<li".($n==5?" class='active'":"")."><a href='{$base}12'>5. Render</a></li>
+			<li".($n==4?" class='active'":"")."><a href='{$base}10'>4. Goals</a></li>
+			<li".($n==5?" class='active'":"")."><a href='{$base}11'>5. Financial</a></li>
+			<li".($n==6?" class='active'":"")."><a href='{$base}14'>6. Render</a></li>
 		</ol></div><br style='clear: both'/>";
 		
 		if($sn != null) {
@@ -33,16 +34,17 @@
 					<li".($sn==1?" class='active'":"")."><a href='{$base}3'>a. Basic Info</a></li>
 					<li".($sn==2?" class='active'":"")."><a href='{$base}4'>b. The Team</a></li>
 					<li".($sn==3?" class='active'":"")."><a href='{$base}5'>c. About the Company</a></li>
-					<li".($sn==4?" class='active'":"")."><a href='{$base}6'>d. Products</a></li>
-					<li".($sn==5?" class='active'":"")."><a href='{$base}7'>e. Milestones</a></li>
-					<li".($sn==6?" class='active'":"")."><a href='{$base}8'>f. Company Description</a></li>
+					<li".($sn==4?" class='active'":"")."><a href='{$base}6'>d. Services</a></li>
+					<li".($sn==5?" class='active'":"")."><a href='{$base}7'>e. Products</a></li>
+					<li".($sn==6?" class='active'":"")."><a href='{$base}8'>f. Milestones</a></li>
+					<li".($sn==7?" class='active'":"")."><a href='{$base}9'>g. Market Overview</a></li>
 				</ol></div><br style='clear: both'/>";
 			}
-			if($n==4) {
+			if($n==5) {
 				$out .= "<div class='steps'><ol class='steps substeps'>
-					<li".($sn==1?" class='active'":"")."><a href='{$base}9'>a. Financial Overview</a></li>
-					<li".($sn==2?" class='active'":"")."><a href='{$base}10'>b. Applicant</a></li>
-					<li".($sn==3?" class='active'":"")."><a href='{$base}11'>c. Company</a></li>
+					<li".($sn==1?" class='active'":"")."><a href='{$base}11'>a. Financial Overview</a></li>
+					<li".($sn==2?" class='active'":"")."><a href='{$base}12'>b. Applicant</a></li>
+					<li".($sn==3?" class='active'":"")."><a href='{$base}13'>c. Company</a></li>
 				</ol></div><br style='clear: both'/>";
 			}
 		}
@@ -51,7 +53,7 @@
 	}
 	  
 	function upsmart_page_create($post) {
-		$post->post_title = 'Hosting Signup';
+//		$post->post_title = 'Hosting Signup';
 		switch(upsmart_handle_page_info) {
 			default:
 			case '/1': $post = upsmart_page_create_home($post); break;
@@ -59,13 +61,15 @@
 			case '/3': $post = upsmart_page_create_business_basic($post); break;
 			case '/4': $post = upsmart_page_create_business_people($post); break;
 			case '/5': $post = upsmart_page_create_business_desc($post); break;
-			case '/6': $post = upsmart_page_create_products($post); break;
-			case '/7': $post = upsmart_page_create_milestones($post); break;
-			case '/8': $post = upsmart_page_create_companydescription($post); break;
-			case '/9': $post = upsmart_page_create_financial($post); break;
-			case '/10': $post = upsmart_page_create_financial_applicant($post); break;
-			case '/11'; $post = upsmart_page_create_financial_business($post); break;
-			case '/12'; $post = upsmart_page_create_render($post); break;
+			case '/6': $post = upsmart_page_create_business_services($post); break;
+			case '/7': $post = upsmart_page_create_products($post); break;
+			case '/8': $post = upsmart_page_create_milestones($post); break;
+			case '/9': $post = upsmart_page_create_companydescription($post); break;
+			case '/10': $post = upsmart_page_create_goals($post); break;
+			case '/11': $post = upsmart_page_create_financial($post); break;
+			case '/12': $post = upsmart_page_create_financial_applicant($post); break;
+			case '/13'; $post = upsmart_page_create_financial_business($post); break;
+			case '/14'; $post = upsmart_page_create_render($post); break;
 			case '/98': $post = upsmart_page_create_done($post); break;
 			case '/1111': $post = upsmart_page_create_clean($post); break;
 			case '/2222': $post = upsmart_page_create_delete($post); break;
@@ -125,6 +129,7 @@ EOHTML;
 	
 	function upsmart_page_create_business_basic($post) {
 		global $wpdb;
+		$business = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 		
 		upsmart_require_login();
 		
@@ -138,7 +143,7 @@ EOHTML;
 		}
 		
 		$post->post_content .= <<<EOHTML
-		<span class='subheading'>We'd like to know more about you and your company. Just fill out the fields below (everything is required).</span>
+		<span class='subheading'>We'd like to know more about {$business['name']}. Just fill out the fields below (everything is required).</span>
 		<h3>Basic Info</h3>
 EOHTML;
 		$post->post_content .= upsmart_create_business_form();
@@ -148,6 +153,7 @@ EOHTML;
 	
 	function upsmart_page_create_business_people($post) {
 		global $wpdb;
+		$business = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 		
 		upsmart_require_login();
 		
@@ -156,16 +162,16 @@ EOHTML;
 		if(!empty($_POST)) {
 			$result = upsmart_create_people_save();
 			if($result === false) wp_die("An error has occurred.");
-			wp_redirect(home_url('create/5'));
+// 			wp_redirect(home_url('create/5'));
  			exit();
 		}
 
 		upsmart_create_people_scripts();
 		
 		$post->post_content .= <<<EOHTML
-		<div class= 'subheading'>We'd like to know more about you and your company. Just fill out the fields below (everything is required).
+		<div class= 'subheading'>We'd like to know more about your company. Just fill out the fields below.
 		
-		<h3>The Team</h3>
+		<h3>The {$business['name']} Team</h3>
 		Introducing the people behind the idea is important. Feel free to send in snapshots of each person. Putting a face to the product is surprisingly good at making an idea "come to life" in the minds of others.</div>
 EOHTML;
 		$post->post_content .= upsmart_create_people_form();
@@ -175,6 +181,8 @@ EOHTML;
 
 	function upsmart_page_create_business_desc($post) {
 		global $wpdb;
+		$business = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+
 		
 		upsmart_require_login();
 		
@@ -183,31 +191,31 @@ EOHTML;
 		if(!empty($_POST)) {
 			$result = upsmart_create_profile_save();
 			if($result === false) wp_die("An error has occurred.");
-// 			wp_redirect(home_url('create/5'));
+			wp_redirect(home_url('create/6'));
  			exit();
 		}
 		
 		upsmart_create_profile_scripts();
 		
 		$post->post_content .= <<<EOHTML
-		We'd like to know more about you and your company. Just fill out the fields below (everything is required).
+		We'd like to know more about {$business['name']}. Just fill out the fields below.
 		<h3>About the Company</h3>
 EOHTML;
 		$post->post_content .= upsmart_create_profile_form();
 		return $post;
 	}
-
-	function upsmart_page_create_milestones($post) {
+	function upsmart_page_create_business_services($post) {
 		global $wpdb;
+		$business = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 		
 		upsmart_require_login();
 		
-		$post->post_content = upsmart_page_create_nav(3,5).'<h2>Business Information</h2>';
+		$post->post_content = upsmart_page_create_nav(3,4).'<h2>Business Information</h2>';
 		
 		if(!empty($_POST)) {
-			$result = upsmart_create_milestones_save();
+			$result = upsmart_create_business_services_save();
 			if($result === false) wp_die("An error has occurred.");
-			wp_redirect(home_url('create/8'));
+			wp_redirect(home_url('create/7'));
 
 			exit();
       
@@ -215,7 +223,33 @@ EOHTML;
 		
 		
 		$post->post_content .= <<<EOHTML
-		We'd like to know more about you and your company. Just fill out the fields below.
+		We'd like to know more about your company. Just fill out the fields below.
+		<h3>{$business['name']}'s Services</h3>
+EOHTML;
+		$post->post_content .= upsmart_create_business_services_form();
+		return $post;
+	}
+
+
+	function upsmart_page_create_milestones($post) {
+		global $wpdb;
+		
+		upsmart_require_login();
+		
+		$post->post_content = upsmart_page_create_nav(3,6).'<h2>Business Information</h2>';
+		
+		if(!empty($_POST)) {
+			$result = upsmart_create_milestones_save();
+			if($result === false) wp_die("An error has occurred.");
+			wp_redirect(home_url('create/9'));
+
+			exit();
+      
+		}
+		
+		
+		$post->post_content .= <<<EOHTML
+		We'd like to know more about your company. Just fill out the fields below.
 		<h3>Company Milestones</h3>
 EOHTML;
 		$post->post_content .= upsmart_create_milestones_form();
@@ -227,12 +261,12 @@ EOHTML;
 		
 		upsmart_require_login();
 		
-		$post->post_content = upsmart_page_create_nav(3,4).'<span class=subheading><h2>Business Information</h2></span>';
+		$post->post_content = upsmart_page_create_nav(3,5).'<span class=subheading><h2>Business Information</h2></span>';
 		
 		if(!empty($_POST)) {
 			$result = upsmart_create_products_save();
 			if($result === false) wp_die("An error has occurred.");
-			wp_redirect(home_url('create/7'));
+			wp_redirect(home_url('create/8'));
  			exit();
 		}
 		
@@ -240,7 +274,7 @@ EOHTML;
 		upsmart_create_products_scripts();
 		
 		$post->post_content .= <<<EOHTML
-		<div class=subheading>We'd like to know more about you and your company. Just fill out the fields below (everything is required).
+		<div class=subheading>We'd like to know more about your company. Just fill out the fields below.
 		<h3>Products</h3>
 		Now it's time to learn more about your company's product(s). Click on the plus button below to add one.</div>
 EOHTML;
@@ -249,18 +283,42 @@ EOHTML;
 		
 		return $post;
 	}
-	
+	function upsmart_page_create_goals($post) {
+	global $wpdb;
+	$business = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+
+		
+		upsmart_require_login();
+		
+		$post->post_content = upsmart_page_create_nav(4).'<h2>'.$business['name'].' Goals</h2>';
+		
+		if(!empty($_POST)) {
+			$result = upsmart_create_goals_save();
+			if($result === false) wp_die("An error has occurred.");
+			wp_redirect(home_url('create/9'));
+
+			exit();
+      
+		}
+		
+		
+		$post->post_content .= <<<EOHTML
+		<span class='subheading'>A statement of goals and timetables are crucial for execution, especially when you are seeking capital.<br/>Let us know what you've got planned!</span>
+EOHTML;
+		$post->post_content .= upsmart_create_goals_form();
+		return $post;
+	}
 	function upsmart_page_create_financial($post) {
 		global $wpdb;
 		
 		upsmart_require_login();
 		
-		$post->post_content = upsmart_page_create_nav(4,1).'<h2>Extended Company Description</h2>';
+		$post->post_content = upsmart_page_create_nav(5,1).'<h2>Financial</h2>';
 		
 		if(!empty($_POST)) {
 			$result = upsmart_create_financial_save();
 			if($result === false) wp_die("An error has occurred.");
-			wp_redirect(home_url('create/10'));
+			wp_redirect(home_url('create/12'));
 			exit();
 		}
 		
@@ -280,13 +338,13 @@ EOHTML;
 		if(!empty($_POST)) {
 			$result = upsmart_create_financial_applicant_save();
 			if($result === false) wp_die("An error has occurred.");
-			wp_redirect(home_url('create/11'));
+			wp_redirect(home_url('create/13'));
  			exit();
 		}
 		
 		
 		$post->post_content .= <<<EOHTML
-		<div class= 'subheading'>We'd like to know more about you and your company. Just fill out the fields below (everything is required).</div>
+		<div class= 'subheading'>We'd like to know more about your company. Just fill out the fields below.</div>
 		<h3>Overview</h3>
 EOHTML;
 		$post->post_content .= upsmart_create_financial_applicant_form();
@@ -303,13 +361,13 @@ EOHTML;
 		if(!empty($_POST)) {
 			$result = upsmart_create_financial_business_save();
 			if($result === false) wp_die("An error has occurred.");
-			wp_redirect(home_url('create/12'));
+			wp_redirect(home_url('create/14'));
  			exit();
 		}
 		
 		
 		$post->post_content .= <<<EOHTML
-		We'd like to know more about you and your company. Just fill out the fields below (everything is required).
+		We'd like to know more about your company. Just fill out the fields below.
 		<h3>About the Company</h3>
 EOHTML;
 		$post->post_content .= upsmart_create_financial_business_form();
@@ -322,28 +380,38 @@ EOHTML;
 		upsmart_require_login();
 		
 		$post -> post_content = upsmart_page_create_nav(5,1)."<span class='subheading'><h2>Render</h2></span>";
-		
-		$post->post_content .= upsmart_create_render();
+		if(!empty($_POST)) {
+			$result = upsmart_create_render_save();
+			if($result === false) wp_die("An error has occured.");
+			wp_redirect(home_url('create/15'));
+			exit();
+		}
+		$post->post_content .= upsmart_create_render_form();
 		return $post;
 	}
 
 	function upsmart_page_create_companydescription($post) {
 		global $wpdb;
+		$business = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 		
 		upsmart_require_login();
 		
-		$post->post_content = upsmart_page_create_nav(3,6).'<h2>Extended Company Description</h2>';
+		$post->post_content = upsmart_page_create_nav(3,7).'<h2>Business Information</h2>';
 		
 		if(!empty($_POST)) {
 			$result = upsmart_create_companydescription_save();
 			if($result === false) wp_die("An error has occurred.");
-			wp_redirect(home_url('create/9'));
+			wp_redirect(home_url('create/10'));
 			exit();
 		}
 
 		upsmart_create_profile_scripts();
 		
-		$post->post_content .= "We'd like to know more about you and your company. Just fill out the fields below (everything is required).";
+		$post->post_content .= <<<EOHTML
+		<span class='subheading'>We'd like to know more about your company. Just fill out the fields below.</span>
+		<h3>Market Overview</h3>
+		{$business['name']} is entering a market made up of competitors, target customers and many unique variables to consider.  Below, tell us a bit about it.
+EOHTML;
 		$post->post_content .= upsmart_create_companydescription_form();
 		
 		return $post;

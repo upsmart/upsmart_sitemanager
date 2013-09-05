@@ -63,11 +63,11 @@ EOHTML;
 			'no' => ($data['incorporated']!=1)?'checked="checked"':'',
 		);
 		
-		$site = array(
-			'yes' => ($data['has']==1)?'checked="checked"':'',
-			'no' => ($data['incorporated']!=1)?'checked="checked"':'',
-		);
-		
+// 		$site = array(
+// 			'yes' => ($data['has']==1)?'checked="checked"':'',
+// 			'no' => ($data['incorporated']!=1)?'checked="checked"':'',
+// 		);
+		$legal_value=$data['legal_structure'];
 		return <<<EOHTML
 			<form method='post'>
 			<table class='infoentry'>
@@ -80,7 +80,10 @@ EOHTML;
 						<input type='radio' name='project_incorporated' {$inc['no']} value='no'/> No
 					</td>
 				</tr>
-				<tr><th>Web Site URL</th><td class= 'textinput'><input name='project_site' value='{$data['url']}' placeholder='http://www.example.com/'/></td></tr>
+				<tr>
+					<th>How is your company legally structured?</th><td><div id='legal_structure' class='styled-select'><select name="legal_structure" value="Corperation"><option value='{$data['legal_structure']}' selected>$legal_value</option><option value="Sole Proprietorship">Sole Proprietorship</option><option value="Partnership">Partnership</option><option value="Corperation">Corperation</option><option value="S-Corperation">S-Corperation</option><option value="Limited Liability Company">Limited Liability Company</option></select></div></td>
+				</tr>
+				<tr><th>Web Site URL</th><td class= 'textinput'><input name='project_site' value='{$data['url']}' placeholder='https://www.example.com/'/></td></tr>
 			</table>
 			<input type='submit' value='Save'/>
 			</form>
@@ -89,13 +92,14 @@ EOHTML;
 	function upsmart_create_business_save() {
 		global $wpdb;
 		$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_business
-		                                      (wordpress_id,name,slogan,incorporated,url)
-		                                      VALUES(%d,%s,%s,%d,%s)",
+		                                      (wordpress_id,name,slogan,incorporated,legal_structure,url)
+		                                      VALUES(%d,%s,%s,%d,%s,%s)",
 		                                      array(
 		                                          get_current_user_id(),
 		                                          $_POST['project_name'],
 		                                          $_POST['project_slogan'],
 		                                          ($_POST['project_incorporated']=='yes')?1:0,
+		                                          $_POST['legal_structure'],
 		                                          ($_POST['project_hassite']=='yes')?$_POST['project_site']:''
 		                                      )
 		));
@@ -115,30 +119,29 @@ EOHTML;
 		global $wpdb;
 		$data = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_profile WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 		$current_user=get_current_user_id();
+		$business = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 		
 		$media_url = admin_url("media-upload.php?type=image&amp;TB_iframe=true");
 		
-		echo $data['logo'];
-		$fields = array(logo, media_1, media_2);
+// 		echo $data['logo'];
+		$fields = array('logo', 'media_1', 'media_2');
 		foreach ($fields as $field) {
-		echo "<br/>".$field."<br/>";
+// 		echo "<br/>".$field."<br/>";
 		${$field."extension"}=substr($data[$field], strpos($data[$field], ".")+1);
-		echo "<br/> Hey look at this!!!!".$media_1extension."<br/>";
+// 		echo "<br/> Hey look at this!!!!".$media_1extension."<br/>";
 		if ($data[$field]!=null){
-			echo "datafield: ".$data[$field]."<br/>";
-			echo "#".$field."row .customfile-feedback:not(.customfile-feedback-populated){visibility: hidden;}";
+// 			echo "datafield: ".$data[$field]."<br/>";
+// 			echo "#".$field."row .customfile-feedback:not(.customfile-feedback-populated){visibility: hidden;}";
 			echo("<style type='text/css'>#".$field."row .customfile-feedback:not(.customfile-feedback-populated){visibility: hidden;} #".$field."row th{padding-top:0px !important;}</style>");
-EOHTML;
-		echo "booga booga booga";
+// EOHTML;
+// 		echo "booga booga booga";
 		}else{ 
 			echo("<style type='text/css'>#existing".$field."{display:none;}</style>");
-			echo "<p>hi</p>";
-EOHTML;
 		}
 		}
 		$out = <<<EOHTML
 		<form method='post' enctype='multipart/form-data'>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 		<script type="text/javascript" src='https://dl.dropboxusercontent.com/u/11993667/jQuery-Custom-File-Input/js/jQuery.fileinput.js'></script>
 
 	<script type="text/javascript">
@@ -176,10 +179,9 @@ EOHTML;
 	</table>
 	<table class= 'wp-editor'>
 
-		<tr><th><strong>How many years has the company been in business?</strong></th><td><input type='text' size='2' maxlength='2' name='yearsactive' value='{$data['yearsactive']}'/>years</td></tr>
 		<tr><th><h3>About</h3></th></tr>
 		<tr><th colspan='2'><h4>Mission Statement</h4></th></tr>
-		<tr><td colspan='2'>Your mission statement should include ...</td></tr>
+		<tr><td colspan='2'>Your mission statement is a quick statement of the single, fundamental goal behind what your company is doing.  Companies go through lots of changes as they grow; your mission statement should serve as the anchor that you revisit to determine whether the company's evolution are in line with your vision.</td></tr>
 		<tr><td colspan='2'>
 EOHTML;
 	$settings = array(
@@ -198,7 +200,7 @@ EOHTML;
 		</td></tr>
 		
 		<tr><th colspan='2'><h4>Company History</h4></th></tr>
-		<tr><td colspan='2'>Let us know your background. Some things to think about: ...</td></tr>
+		<tr><td colspan='2'>Let us know your background. Why was your company founded?  By whom?  Is there any particular legacy of note? <br/>Tell us {$business['name']}'s story!</td></tr>
 		<tr><td colspan='2'>
 EOHTML;
 	$out .= upsmart_get_editor($data['history'],'history', $settings);
@@ -291,25 +293,78 @@ EOHTML;
 	function upsmart_create_milestones_form() {
 		global $wpdb;
 		$data = $wpdb->get_results($wpdb->prepare("SELECT * FROM upsmart_milestones WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$founded = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_founded WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$business = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 		$months = array('January','February','March','April','May','June','July ','August','September','October','November','December');
 		$out = <<<EOHTML
 		<script src="js/modernizr-1.7.min.js"></script>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-		<script type="text/javascript" src="https://dl.dropboxusercontent.com/u/11993667/jquery.customSelect-master/jquery.customSelect.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function(){
-			    $('.styled').customSelect();
-			    /* -OR- set a custom class name for the stylable element */
-			    $('.mySelectBoxClass').customSelect({customClass:'mySelectBoxClass'});
-			});
-		</script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 		<form method='post'>
-			<div class="subheading">
-			<p>Below, share any milestone achievements of your company.  These could be first-hires, funding that you've received, revenue achievements, or anything else.</p>
+			 <div class="subheading">
+				  <strong>Please tell us when {$business['name']} was founded.</strong>
 			</div>
-			<script type="text/javascript" src="http://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_business_milestone.js"></script>
+			<table class= 'milestones' width="350px" border="1">
+			<tr>
+				<td class= 'milestone'>
+					<div id='month' class= 'styled-select'>
+					<select name="foundmonth">
+EOHTML;
+				foreach ($months as $month) {
+					if($month == $founded['month']){
+						$out .= <<<EOHTML
+						<option value="{$month}" selected>$month</option>
+EOHTML;
+					continue;
+					}
+					$out .= <<<EOHTML
+					<option value="{$month}">$month</option>
+EOHTML;
+				}
+				$out .= <<<EOHTML
+				</select>
+				<div></div>
+				</div>
+				<div id='day' class='styled-select'>
+				<select name="foundday">
+EOHTML;
+				foreach (range(1, 31) as $day) {
+					if($day == $founded['day']){
+						$out .= <<<EOHTML
+						<option value="{$day}" selected>$day</option>
+EOHTML;
+					}
+					$out .= <<<EOHTML
+					<option value="{$day}">{$day}</option>
+EOHTML;
+				}
+				$out .= <<<EOHTML
+				</select>
+				</div>
+				<div id='year' class='styled-select'>
+				<select name="foundyear">
+EOHTML;
+				foreach (range(2013, 1990, -1) as $year) {
+					if($year == $founded['year']){
+						$out .= <<<EOHTML
+						<option value="{$year}" selected>$year</option>
+EOHTML;
+					}
+					$out .= <<<EOHTML
+					<option value="{$year}">{$year}</option>
+EOHTML;
+				}
+				$out .= <<<EOHTML
+					</select>
+					</div>
+				</td>
+			</tr>
+			</table>
+			<div class="subheading subheading-top">
+				  <strong>Below, share any milestone achievements of {$business['name']}.</strong><br/>These could be first-hires, funding that you've received, revenue achievements, or anything else.
+			</div>
+			<script type="text/javascript" src="https://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_business_milestone.js"></script>
 			<div id='milestones'>
-			<div id='addRow'><input type="button" value="Add Row" onclick="addRow('dataTable')" /></div>
+			<div id='addRow'><input type="button" value="Add Milestone" onclick="addRow('dataTable')" /></div>
 			<table id="dataTable" class= 'milestones' width="350px" border="1">
 EOHTML;
 		$count = 0;
@@ -390,6 +445,21 @@ EOHTML;
 		$i = 0;
 		$wpid = get_current_user_id();
 		mysql_query("DELETE FROM upsmart_milestones WHERE wordpress_id=".$wpid."") or die(mysql_error());
+		
+		echo "<br/>Day: ".$_POST["foundday"];
+		echo "<br/>Month: ".$_POST["foundmonth"];
+		echo "<br/>Year: ".$_POST["foundyear"]."<br/>";
+		
+		$result_founded = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_founded
+		                                      (wordpress_id,month,day,year)
+		                                      VALUES(%d,%s,%d,%d)",
+		                                      array(
+							  get_current_user_id(),
+							  $_POST["foundmonth"],
+							  $_POST["foundday"],
+							  $_POST["foundyear"],
+						      )
+			));
 		foreach ($_POST["txt"] as $txt_value){
 
 			$day = $_POST["day"][$i];
@@ -408,10 +478,10 @@ EOHTML;
 		                                          $txt,
 		                                      )
 			));
-			echo "<br/>";
-			echo "The variable I equals".$i;
-			echo mysql_error();
-			echo $month;
+// 			echo "<br/>";
+// 			echo "The variable I equals".$i;
+// 			echo mysql_error();
+// 			echo $month;
 			$i++;
 
 		}
@@ -501,11 +571,30 @@ EOHTML;
 		
 		$wpdb->query($wpdb->prepare("DELETE FROM upsmart_people WHERE wordpress_id = %d",array(get_current_user_id())));
 		
+
+// 		echo $_POST['json']."<br/><br/><br/><br/>";
+// 		echo "hello world! <br />";
+// 		foreach($data as $p) {
+// 			echo "Fname: ".$p->fname."<br>/>";
+// 			echo "Lname: ".$p->lname."<br>/>";
+// 			echo "Title: ".$p->title."<br>/>";
+// 			echo "Bio: ".$p->bio."<br>/>";
+// // 			echo $p->photo."<br>/>";
+// 			echo "Owner: ".$p->owner."<br>/>";
+// 			echo "Own_percentage: ".$p->ownership_percentage."<br>/>";
+// 		}
+
 		foreach($data as $p) {
+			echo "<br/>".$p->fname." ".$p->lname.": ".$p->owner;
 			if($p == null) continue;
+			if (!isset($p->owner)) {
+			$p->owner = 0;
+			echo $p->owner."<br/>";
+			echo "detected!";
+			}
 			$result = $wpdb->query($wpdb->prepare("INSERT INTO upsmart_people
-							(wordpress_id,fname,lname,title,bio,photo,owner,percent_owner,edu,skills,prof,awards,community,years,compensation)
-							VALUES(%d,%s,%s,%s,%s,%s,%d,%d,%s,%s,%s,%s,%s,%d,%s)",
+							(wordpress_id,fname,lname,title,bio,photo,owner,percent,founder,edu,skills,prof,awards,community,years,compensation)
+							VALUES(%d,%s,%s,%s,%s,%s,%d,%d,%d,%s,%s,%s,%s,%s,%d,%s)",
 							array(
 								get_current_user_id(),
 								$p->fname,
@@ -514,7 +603,8 @@ EOHTML;
 								$p->bio,
 								$p->photo,
 								$p->owner,
-								$p->ownership_percentage,
+								$p->percent,
+								$p->founder,
 								$p->edu,
 								$p->skills,
 								$p->prof,
@@ -528,7 +618,7 @@ EOHTML;
 
 			if($result === false) return false;
 		}
-		echo $_POST['jason'];
+// 		echo $_POST['json'];
 		return true;
 	}
 	
@@ -695,6 +785,117 @@ EOHTML;
 		if($result === false) return false;
 		return true;
 	}
+	function upsmart_create_goals_form(){
+		global $wpdb;
+		$threemonths = $wpdb->get_results($wpdb->prepare("SELECT * FROM upsmart_goals WHERE wordpress_id=%d AND timetable='threemonths'",get_current_user_id()),ARRAY_A);
+		$nextyear = $wpdb->get_results($wpdb->prepare("SELECT * FROM upsmart_goals WHERE wordpress_id=%d AND timetable='nextyear'",get_current_user_id()),ARRAY_A);
+		$twoyears = $wpdb->get_results($wpdb->prepare("SELECT * FROM upsmart_goals WHERE wordpress_id=%d AND timetable='twoyears'",get_current_user_id()),ARRAY_A);
+		$business = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$out = <<<EOHTML
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+		<form method='post' id='goals'>
+		
+		<script type="text/javascript" src="https://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_business_milestone.js"></script>
+EOHTML;
+		$timetables = array('threemonths','nextyear','twoyears');
+		foreach($timetables as $timetable)
+// 		echo "<br/>Timetable: ".$timetable."<br/>";
+		if(empty($$timetable)){
+			array_push($$timetable, get_current_user_id());
+		}
+		$out .= <<<EOHTML
+		<div id='goals'>
+			
+			<div class='goalhead'><h4>What does {$business['name']} aim to achieve within the next three months?</h4>
+			<div class='addRow'><input type="button" value="Add Goal" onclick="addRow('threemonths')" /></div></div>
+		<table id="threemonths" class= 'milestones' width="350px" border="1">
+EOHTML;
+		$count = 0;
+		foreach($threemonths as $goal){
+		$out .= <<<EOHTML
+			<tr>
+				<td class= 'deleteRow'><input type="button" name="Delete" onClick="newDelete(this);"/> </td>
+				<td><input type="text" name="txt[]" value='{$goal['description']}'/><input type="hidden" name="type[]" value='threemonths'></td>
+			</tr>
+EOHTML;
+		} /* END FOR EACH LOOP ON MILESTONES */
+		
+	$out .= <<<EOHTML
+		</table>
+		<div class='goalhead'>
+			  <h4>What does {$business['name']} aim to achieve within the next year?</h4>
+		<div class='addRow'><input type="button" value="Add Goal" onclick="addRow('nextyear')" /></div>
+		</div>
+		<table id="nextyear" class= 'milestones' width="350px" border="1">
+EOHTML;
+		$count = 0;
+		foreach($nextyear as $goal){
+		$out .= <<<EOHTML
+			<tr>
+				<td class= 'deleteRow'><input type="button" name="Delete" onClick="newDelete(this);"/> </td>
+				<td><input type="text" name="txt[]" value='{$goal['description']}'/><input type="hidden" name="type[]" value='nextyear'></td>
+			</tr>
+EOHTML;
+		} /* END FOR EACH LOOP ON MILESTONES */
+		
+	$out .= <<<EOHTML
+		</table>
+		<div class='goalhead'>
+			<h4>What does {$business['name']} aim to achieve within the next year?</h4>
+			<div class='addRow'><input type="button" value="Add Goal" onclick="addRow('twoyears')" /></div>
+		</div>
+		<table id="twoyears" class= 'milestones' width="350px" border="1">
+EOHTML;
+		$count = 0;
+		foreach($twoyears as $goal){
+		$out .= <<<EOHTML
+			<tr>
+				<td class= 'deleteRow'><input type="button" name="Delete" onClick="newDelete(this);"/> </td>
+				<td><input type="text" name="txt[]" value='{$goal['description']}'/><input type="hidden" name="type[]" value='twoyears'></td>
+			</tr>
+EOHTML;
+		} /* END FOR EACH LOOP ON MILESTONES */
+		
+	$out .= <<<EOHTML
+		</table>
+		</div>
+		<input type='submit' value='Save'/>
+		</form>
+EOHTML;
+	return $out;
+	}/* END FUNCTION */
+	function upsmart_create_goals_save(){
+			global $wpdb;
+		$i = 0;
+		$wpid = get_current_user_id();
+		mysql_query("DELETE FROM upsmart_goals WHERE wordpress_id=".$wpid."") or die(mysql_error());
+
+		foreach ($_POST["txt"] as $goal){
+
+			$description = $_POST["txt"][$i];
+			$type=$_POST["type"][$i];
+			echo get_current_user_id();
+			echo $description;
+			echo "<br/>".$type."<br/>";
+			$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_goals
+		                                      (wordpress_id,description,timetable)
+		                                      VALUES(%d,%s,%s)",
+		                                      array(
+		                                          get_current_user_id(),
+		                                          $description,
+		                                          $type
+		                                      )
+			));
+// 			echo "<br/>";
+// 			echo "The variable I equals".$i;
+// 			echo mysql_error();
+// 			echo $month;
+			$i++;
+
+		}
+			if($result === false) return false;
+			return true;
+	}
 
 	function upsmart_create_financial_form() {
 		global $wpdb;
@@ -725,6 +926,67 @@ EOHTML;
 EOHTML;
 			}
 	}
+	
+	function upsmart_create_business_services_form(){
+		global $wpdb;
+		$data = $wpdb->get_results($wpdb->prepare("SELECT * FROM upsmart_services WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$months = array('January','February','March','April','May','June','July ','August','September','October','November','December');
+		if(empty($$timetable)){
+			array_push($data, get_current_user_id());
+		}
+		$out = <<<EOHTML
+		<script src="js/modernizr-1.7.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+		<form method='post'>
+			<div class="subheading">
+			Below, give a 160 character description of each service your company offers.
+			</div>
+			<script type="text/javascript" src="https://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_business_services.js"></script>
+			<div id='services'>
+			<div id='addRow'><input type="button" value="Add Service" onclick="addRow('dataTable')" /></div>
+			<table id= 'dataTable' class= 'services' width="350px" border="1">
+EOHTML;
+		foreach($data as $service){
+		$out .= <<<EOHTML
+			<tr>
+				<td class= 'deleteRow'><input type="button" name="Delete" onClick="newDelete(this);"/> </td>
+				<td><input type="text" name="txt[]" value='{$service['description']}'/></td>
+			</tr>
+EOHTML;
+		} /* END FOR EACH LOOP ON MILESTONES */
+		
+	$out .= <<<EOHTML
+		</table>
+		</div>
+		<input type='submit' value='Save'/>
+		</form>
+EOHTML;
+	return $out;
+	}/* END FUNCTION */
+	
+	function upsmart_create_business_services_save(){
+		global $wpdb;
+		$i = 0;
+		$wpid = get_current_user_id();
+		mysql_query("DELETE FROM upsmart_services WHERE wordpress_id=".$wpid."") or die(mysql_error());
+		foreach ($_POST["txt"] as $txt_value){
+			echo "<br/>it is: ".$_POST["txt"][$i]."<br/>";
+			$txt = $_POST["txt"][$i];
+			
+			$result = $wpdb->query($wpdb->prepare("REPLACE INTO upsmart_services
+		                                      (wordpress_id,description)
+		                                      VALUES(%d,%s)",
+		                                      array(
+		                                          get_current_user_id(),
+		                                          $txt,
+		                                      )
+			));
+			$i++;
+
+		}
+			if($result === false) return false;
+			return true;
+	}
 
 	function upsmart_create_financial_save() {
 		global $wpdb;
@@ -747,7 +1009,7 @@ EOHTML;
 		$liabilities = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_personal_financial_liabilities WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 
 			return <<<EOHTML
-		<script type="text/javascript" src="http://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_finance.js"></script>
+		<script type="text/javascript" src="https://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_finance.js"></script>
 			<body onload="findTotalAssets();findTotalLiabilities();findGrandTotal();">
 			<form name='assetsandliabilitiesform' method='post'>
 			
@@ -779,9 +1041,8 @@ EOHTML;
 				
 				<tr><th class='total'><h4>Net:</h4></th><td class='total numbers'>$<input type="text" name="grand_total" id='grand_total' disabled/></td></tr>
 				
-				<tr class='submit'><td colspan='2'><input type='submit' value='Save'/></td></tr>
-
 			</table>
+			<input type='submit' value='Save'/>
 			</form>
 			</body>
 EOHTML;
@@ -824,7 +1085,8 @@ EOHTML;
 		                                      )
 		));
 		
-		if($result === false) return false;
+		if($result_assets === false) return false;
+		if($result_liabilities === false) return false;
 		return true;
 	}
 	
@@ -834,7 +1096,7 @@ EOHTML;
 		$liabilities = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business_financial_liabilities WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 
 			return <<<EOHTML
-		<script type="text/javascript" src="http://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_finance.js"></script>
+		<script type="text/javascript" src="https://upsmart.com/wp-content/plugins/upsmart_sitemanager/js/create_finance.js"></script>
 			<body onload="findTotalAssets();findTotalLiabilities();findGrandTotal();">
 			<form name= 'assetsandliabilitiesform' method='post'>
 			<table class='assetsandliabilities'>
@@ -921,32 +1183,223 @@ EOHTML;
 
 	function upsmart_create_render_form() {
 		global $wpdb;
-		$data = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_disclaimer WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
 		
-			if($data['financial'] != 1){
-			return <<<EOHTML
-			<form method='post'>
-			<table>
-				<tr><th><h4>By proceeding, you declare all information that you provide to be true, to the best of your knowledge, under the penalty of purjury.</h4></th></tr><tr><td><input type=checkbox name='financial_disclaimer' value='1'/>Yes, I understand.</td></tr>
-			</table>
-			<input type='submit' value='Save'/>
-			</form>
-EOHTML;
-			}else{
-			$redirect=home_url('create/10');
-			if (isset($_POST['button'])){
-			wp_redirect(home_url('create/10'));
+// 		define('FPDF_FONTPATH','fpdf/');
+		require('fpdf/fpdf.php');
+		define("USE_PDF",1);
+		$pdf_font = 'Times';
+		$pdf_fontstyle = '';
+		$pdf_fontsize = 14;
+		
+		$contact = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_contact WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$contact['phone'] = explode('-',$contact['phone']);
+		$business = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$profile = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_profile WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$milestones = $wpdb->get_results($wpdb->prepare("SELECT * FROM upsmart_milestones WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$people = $wpdb->get_results($wpdb->prepare("SELECT * FROM upsmart_people WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$products = $wpdb->get_results($wpdb->prepare("SELECT * FROM upsmart_products WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$milestones = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_description WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$personal_assets = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_personal_financial_assets WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$personal_liabilities = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_personal_financial_liabilities WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$business_assets = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business_financial_assets WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+		$business_liabilities = $wpdb->get_row($wpdb->prepare("SELECT * FROM upsmart_business_financial_liabilities WHERE wordpress_id=%d",get_current_user_id()),ARRAY_A);
+
+// 		var_dump($personal_liabilities);
+// 		echo $mediadir;
+// 		echo $logo;
+		
+		class PDF extends FPDF
+		{
+		// Page header
+		function Header()
+		{
+		    $mediadir = WP_CONTENT_DIR.'/uploads/upsmart/'.get_current_user_id().'/';
+		    $logos = $mediadir."logo.png";
+		    // Logo
+		    $this->Image($logos,10,0,30);
+		    // Arial bold 15
+		    $this->SetFont('Arial','B',15);
+		    // Move to the right
+		    $this->Cell(80);
+		    // Title
+		    $this->Cell(30,10,'Title',1,0,'C');
+		    // Line break
+		    $this->Ln(20);
+		}
+
+		// Page footer
+		function Footer()
+		{
+		    // Position at 1.5 cm from bottom
+		    $this->SetY(-15);
+		    // Arial italic 8
+		    $this->SetFont('Arial','I',8);
+		    // Page number
+		    $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+		}
+		var $B;
+		var $I;
+		var $U;
+		var $HREF;
+
+		function PDF($orientation='P', $unit='mm', $size='A4')
+		{
+			// Call parent constructor
+			$this->FPDF($orientation,$unit,$size);
+			// Initialization
+			$this->B = 0;
+			$this->I = 0;
+			$this->U = 0;
+			$this->HREF = '';
+		}
+		function WriteHTML($example)
+		{
+		    // HTML parser
+		    $example = str_replace("\n",' ',$example);
+		    $a = preg_split('/<(.*)>/U',$example,-1,PREG_SPLIT_DELIM_CAPTURE);
+		    foreach($a as $i=>$e)
+		    {
+			if($i%2==0)
+			{
+			    // Text
+			    if($this->HREF)
+				$this->PutLink($this->HREF,$e);
+			    else
+				$this->Write(5,$e);
 			}
-			return <<<EOHTML
-			<form method='post'>
-			<div style="display:none"><input type=checkbox name='financial_disclaimer' value='1' checked="checked"/></div>
-			<table>
-				<tr><th><h4>By proceeding, you declare all information that you provide to be true, to the best of your knowledge, under the penalty of purjury.</h4></th></tr><tr><td><input type=checkbox name='fin_disclaimer' value='1' checked="checked" disabled/>Yes, I understand.</td></tr>
-			</table>
-			<button name="button">Next</button>
-			</form>
-EOHTML;
+			else
+			{
+			    // Tag
+			    if($e[0]=='/')
+				$this->CloseTag(strtoupper(substr($e,1)));
+			    else
+			    {
+				// Extract attributes
+				$a2 = explode(' ',$e);
+				$tag = strtoupper(array_shift($a2));
+				$attr = array();
+				foreach($a2 as $v)
+				{
+				    if(preg_match('/([^=]*)=["\']?([^"\']*)/',$v,$a3))
+					$attr[strtoupper($a3[1])] = $a3[2];
+				}
+				$this->OpenTag($tag,$attr);
+			    }
 			}
+		    }
+		}
+		function OpenTag($tag, $attr)
+		{
+			// Opening tag
+			if($tag=='B' || $tag=='I' || $tag=='U')
+				$this->SetStyle($tag,true);
+			if($tag=='A')
+				$this->HREF = $attr['HREF'];
+			if($tag=='BR')
+				$this->Ln(5);
+		}
+		function CloseTag($tag)
+		{
+			// Closing tag
+			if($tag=='B' || $tag=='I' || $tag=='U')
+				$this->SetStyle($tag,false);
+			if($tag=='A')
+				$this->HREF = '';
+		}
+		function SetStyle($tag, $enable)
+		{
+			// Modify style and select corresponding font
+			$this->$tag += ($enable ? 1 : -1);
+			$style = '';
+			foreach(array('B', 'I', 'U') as $s)
+			{
+				if($this->$s>0)
+					$style .= $s;
+			}
+			$this->SetFont('',$style);
+		}
+		function PutLink($URL, $txt)
+		{
+			// Put a hyperlink
+			$this->SetTextColor(0,0,255);
+			$this->SetStyle('U',true);
+			$this->Write(5,$txt,$URL);
+			$this->SetStyle('U',false);
+			$this->SetTextColor(0);
+		}	
+		}
+
+		// Instanciation of inherited class
+		$pdf = new PDF();
+		$pdf->AliasNbPages();
+		$pdf->AddPage();
+		$pdf->SetFont('Times','B',18);
+		$pdf->Cell(0,18,'Executive Summary',0,1);
+		$pdf->SetFont('Times','I',12);
+		$pdf->Cell(0,18,$profile['mission'],0,1);
+		$pdf->SetFont('Times','I',12);
+		$pdf->SetFont('Times','',12);
+		$pdf->Cell(0,14, $profile['about'],0,1);
+		$example = 'You can now easily print text mixing different styles: <b>bold</b>, <i>italic</i>,
+		<u>underlined</u>, or <b><i><u>all at once</u></i></b>!<br><br>You can also insert links on
+		text, such as <a href="http://www.fpdf.org">www.fpdf.org</a>, or on an image: click on the logo.';
+		$pdf->WriteHTML(nl2br($profile['about']));
+		$pdf->SetFont('Times','B',18);
+		$pdf->Cell(0,18,'Business Focus',0,1);
+		$pdf->SetFont('Times','B',12);
+		$pdf->Cell(0,12,'Address:',0,1);
+		$pdf->SetFont('Times','',12);
+		$pdf->WriteHTML(nl2br($business['name']."<br>".$contact['street']."<br>".$contact['city']." ".$contact['zip']));	
+		$pdf->SetFont('Times','B',12);
+		$pdf->Cell(0,12,'Number of Years in Business:',0,1);
+// 		$pdf->SetFont('Times','',12);
+// 		$pdf->WriteHTML(nl2br($business['
+		$pdf->SetFont('Times','B',12);
+		$pdf->Cell(0,12,'Legal Structure:',0,1);
+		$pdf->SetFont('Times','',12);
+		$pdf->WriteHTML(nl2br($business['legal_structure']));
+
+		$pdf->AddPage();
+		$pdf->SetFont('Times','B',18);
+// 		foreach ($people as $member){
+// 			$pdf->Cell(0,12, $people['fname'],0,1);
+// 		}
+		
+		$pdf->AddPage();
+		$pdf->SetFont('Times','B',18);
+		$pdf->Cell(0,18,'Services',0,1);
+		$pdf->SetFont('Times','B',18);
+		$pdf->Cell(0,18,'Products',0,1);
+		
+		$pdf->AddPage();
+		
+		$pdf->Output();
+		 
+// 			if($data['financial'] != 1){
+// 			return <<<EOHTML
+// 			
+// 			<br/><br/><form method='post'>
+// 			<table>
+// 				<tr><th><h4>By proceeding, you declare all information that you provide to be true, to the best of your knowledge, under the penalty of purjury.</h4></th></tr><tr><td><input type=checkbox name='financial_disclaimer' value='1'/>Yes, I understand.</td></tr>
+// 			</table>
+// 			<input type='submit' value='Save'/>
+// 			</form>
+// EOHTML;
+// 			}else{
+// 			$redirect=home_url('create/10');
+// 			if (isset($_POST['button'])){
+// 			wp_redirect(home_url('create/10'));
+// 			}
+// 			return <<<EOHTML
+// 			<form method='post'>
+// 			<div style="display:none"><input type=checkbox name='financial_disclaimer' value='1' checked="checked"/></div>
+// 			<table>
+// 				<tr><th><h4>By proceeding, you declare all information that you provide to be true, to the best of your knowledge, under the penalty of purjury.</h4></th></tr><tr><td><input type=checkbox name='fin_disclaimer' value='1' checked="checked" disabled/>Yes, I understand.</td></tr>
+// 			</table>
+// 			<button name="button">Next</button>
+// 			</form>
+// EOHTML;
+// 			}
 	}
 	
 	function upsmart_create_get_template_set($company) {

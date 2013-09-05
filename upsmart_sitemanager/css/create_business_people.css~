@@ -1,4 +1,4 @@
-@import url("http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css");
+@import url("https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css");
 #dialog{
 	display: none;
 }
@@ -50,3 +50,10 @@ tr {
   overflow-y: auto !important;
   
 }
+
+.ui-widget-overlay.ui-front{
+ position: fixed !important;
+  z-index: 222;
+}
+
+.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-front.ui-dialog-buttons.ui-draggable.ui-resizable {z-index: 1000; top: 40px;}
